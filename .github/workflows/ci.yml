@@ -1,0 +1,44 @@
+name: CI
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+on: ['push', 'pull_request']
+
+jobs:
+  ci:
+    runs-on: ${{ matrix.os }}
+    continue-on-error: ${{ matrix.experimental }}
+    strategy:
+      fail-fast: true
+      matrix:
+        os: [ubuntu-latest]
+        node: [20.14]
+        pnpm: [9.3.0]
+        experimental: [false]
+    name: 👷 CI Node-${{ matrix.node }} on ${{ matrix.os }}
+
+    steps:
+      - name: 🚚 Get latest code
+        uses: actions/checkout@v4
+
+      - name: 🎉 Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node }}
+
+      - name: ⚡️ Setup PNPM
+        uses: pnpm/action-setup@v3
+        with:
+          version: ${{ matrix.pnpm }}
+
+      - name: ✅ Check code style
+        run: make check
+
+      - name: 📦️ Upload Deno distribution files
+        uses: actions/upload-artifact@v4
+        with:
+          name: deno_dist
+          path: jsr

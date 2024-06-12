@@ -1,0 +1,72 @@
+{
+  "name": "@siguici/plugwind",
+  "version": "0.0.0",
+  "license": "MIT",
+  "packageManager": "pnpm@9.3.0",
+  "publishConfig": {
+    "access": "public"
+  },
+  "engines": {
+    "node": ">=20.14",
+    "pnpm": ">=9.3",
+    "npm": "prefer using pnpm",
+    "yarn": "prefer using pnpm"
+  },
+  "type": "module",
+  "module": "./js/index.js",
+  "main": "./js/index.js",
+  "types": "./ts/",
+  "files": ["js/**/*", "ts/**/*"],
+  "exports": {
+    ".": "./js/index.js",
+    "./package.json": "./package.json"
+  },
+  "bugs": "https://github.com/siguici/plugwind/issues",
+  "homepage": "https://github.com/siguici/plugwind",
+  "author": {
+    "name": "Sigui Kessé Emmanuel",
+    "email": "siguici@proton.me",
+    "url": "https://github.com/siguici"
+  },
+  "description": "🧩 PlugWind Make it easy to create TailwindCSS plugins.",
+  "keywords": [
+    "plugwind",
+    "componants",
+    "css",
+    "dark-mode",
+    "light-mode",
+    "plugin",
+    "tailwindcss",
+    "typescript",
+    "utilities"
+  ],
+  "sideEffects": false,
+  "private": false,
+  "scripts": {
+    "build": "pnpm build.node && pnpm build.deno",
+    "build.node": "pnpm clear.node && tsc --build",
+    "build.deno": "pnpm clear.deno && pnpm denoify",
+    "check": "biome ci .",
+    "check.format": "biome format .",
+    "check.lint": "biome check .",
+    "clear": "pnpm clear.node && pnpm clear.deno",
+    "clear.node": "rimraf js && rimraf ts",
+    "clear.deno": "rimraf jsr/*",
+    "denoify": "denoify --out jsr",
+    "debug": "pnpm check && pnpm test",
+    "fix": "pnpm lint && pnpm format",
+    "format": "biome format --write .",
+    "lint": "biome check --write ."
+  },
+  "devDependencies": {
+    "@biomejs/biome": "^1.8.1",
+    "@types/node": "^20.14.2",
+    "denoify": "^1.6.13",
+    "rimraf": "^5.0.7",
+    "tailwindcss": "^3.4.4",
+    "typescript": "^5.4.5"
+  },
+  "peerDependencies": {
+    "tailwindcss": "^3.4.3"
+  }
+}
