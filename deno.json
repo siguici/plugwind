@@ -5,7 +5,7 @@
     ".": "./jsr/index.ts",
     "./utils": "./jsr/utils.ts"
   },
-  "include": ["jsr.json", "jsr/*.ts", "README.md", "LICENSE.md"],
+  "include": ["deno.json", "jsr/*.ts", "README.md", "LICENSE.md"],
   "exclude": [
     ".*",
     "jsr/*.test.ts",
