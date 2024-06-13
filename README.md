@@ -49,7 +49,7 @@ You can install [`PlugWind`](https://plugwind.js.org) from [`NPM`](https://npmjs
   Without install:
 
   ```typescript
-  import plugwind from 'jsr:@siguici/plugwind';
+  import plug from 'jsr:@siguici/plugwind';
   ```
 
 ## 💡 Usage
@@ -57,13 +57,13 @@ You can install [`PlugWind`](https://plugwind.js.org) from [`NPM`](https://npmjs
 - Import from `node_modules`:
 
   ```javascript
-  import { plug } from 'plugwind';
+  import plug from '@siguici/plugwind';
   ```
 
 - Import without install (using `Deno`):
 
   ```javascript
-  import { plug } from 'jsr:@siguici/plugwind';
+  import plug from 'jsr:@siguici/plugwind';
   ```
 
 - Use the `plug` function to define a plugin:

@@ -29,22 +29,6 @@ export type PluggerWithOptions<T> = (
   api: PluggerWithOptionsAPI<T>,
 ) => PluginCreator;
 
-const _plug = (plugger: Plugger): TailwindPlugin =>
-  tailwindPlugin((api: PluginAPI) => {
-    const plugin = new Plugin(api);
-    return plugger({ ...api, plugin });
-  });
-
-_plug.with = <T>(
-  plugger: PluggerWithOptions<T>,
-): TailwindPluginWithOptions<T> =>
-  tailwindPlugin.withOptions((options: T) => (api: PluginAPI) => {
-    const plugin = new PluginWithOptions(api, options);
-    return plugger({ ...api, plugin, options });
-  });
-
-export const plug = _plug;
-
 export type ClassName = string;
 export type ClassNames = ClassName[];
 
@@ -150,3 +134,19 @@ export class PluginWithOptions<T> extends Plugin {
     super(api);
   }
 }
+
+const _plug = (plugger: Plugger): TailwindPlugin =>
+  tailwindPlugin((api: PluginAPI) => {
+    const plugin = new Plugin(api);
+    return plugger({ ...api, plugin });
+  });
+
+_plug.with = <T>(
+  plugger: PluggerWithOptions<T>,
+): TailwindPluginWithOptions<T> =>
+  tailwindPlugin.withOptions((options: T) => (api: PluginAPI) => {
+    const plugin = new PluginWithOptions(api, options);
+    return plugger({ ...api, plugin, options });
+  });
+
+export default _plug;
