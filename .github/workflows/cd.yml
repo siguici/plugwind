@@ -47,6 +47,9 @@ jobs:
           run-id: ${{ github.event.workflow_run.id }}
           github-token: ${{ secrets.GITHUB_TOKEN }}
 
+      - name: 📂 List distribution files
+        run: ls -la jsr
+
       - name: 🚨 Fix code style
         run: deno task fix
 
