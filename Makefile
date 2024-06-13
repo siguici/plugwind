@@ -14,5 +14,5 @@ check: install
 fix: install
 	pnpm fix
 
-build: fix
+build: check
 	pnpm build

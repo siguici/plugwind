@@ -34,8 +34,8 @@ jobs:
         with:
           version: ${{ matrix.pnpm }}
 
-      - name: ✅ Check code style
-        run: make check
+      - name: ✅ Check code and build for production
+        run: make build
 
       - name: 📦️ Upload Deno distribution files
         uses: actions/upload-artifact@v4
