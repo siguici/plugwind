@@ -2,13 +2,13 @@ name: CD
 
 on:
   push:
-    tags:
-      - '*'
+    branches:
+      - trunk
 
   workflow_run:
     workflows: [CI]
     types: [completed]
-    branches: ['**']
+    branches: [trunk]
 
 jobs:
   deploy:
@@ -54,4 +54,4 @@ jobs:
         run: deno task fix
 
       - name: 🚀 Publish to JSR
-        run: deno run -A jsr:@david/publish-on-tag@0.1.4
+        run: deno publish
