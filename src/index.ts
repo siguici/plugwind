@@ -1,4 +1,4 @@
-import plugin from 'tailwindcss/plugin';
+import tailwindPlugin from 'tailwindcss/plugin';
 import type {
   Config,
   DarkModeConfig,
@@ -6,13 +6,13 @@ import type {
   PluginCreator,
 } from 'tailwindcss/types/config';
 
-export type PluginWithoutOptions =
+export type TailwindPlugin =
   | PluginCreator
   | {
       handler: PluginCreator;
       config?: Partial<Config>;
     };
-export type PluginWithOptions<T> = {
+export type TailwindPluginWithOptions<T> = {
   (
     options: T,
   ): {
@@ -22,28 +22,28 @@ export type PluginWithOptions<T> = {
   __isOptionsFunction: true;
 };
 
-export type HandlerParams = { api: PluginAPI; plugger: Plugger };
-export type HandlerParamsWithOptions<T> = HandlerParams & { options: T };
-export type PluginHandler = (params: HandlerParams) => PluginCreator;
-export type PluginWithOptionsHandler<T> = (
-  params: HandlerParamsWithOptions<T>,
+export type PluggerAPI = PluginAPI & { plugin: Plugin };
+export type PluggerWithOptionsAPI<T> = PluggerAPI & { options: T };
+export type Plugger = (api: PluggerAPI) => PluginCreator;
+export type PluggerWithOptions<T> = (
+  api: PluggerWithOptionsAPI<T>,
 ) => PluginCreator;
 
-export function plug(handler: PluginHandler): PluginWithoutOptions {
-  return plugin((api: PluginAPI) => {
-    const plugger = new Plugger(api);
-    return handler({ api, plugger });
+const _plug = (plugger: Plugger): TailwindPlugin =>
+  tailwindPlugin((api: PluginAPI) => {
+    const plugin = new Plugin(api);
+    return plugger({ ...api, plugin });
   });
-}
 
-export function plugWithOptions<T>(
-  handler: PluginWithOptionsHandler<T>,
-): PluginWithOptions<T> {
-  return plugin.withOptions((options: T) => (api: PluginAPI) => {
-    const plugger = new PluggerWithOptions(api, options);
-    return handler({ api, plugger, options });
+_plug.with = <T>(
+  plugger: PluggerWithOptions<T>,
+): TailwindPluginWithOptions<T> =>
+  tailwindPlugin.withOptions((options: T) => (api: PluginAPI) => {
+    const plugin = new PluginWithOptions(api, options);
+    return plugger({ ...api, plugin, options });
   });
-}
+
+export const plug = _plug;
 
 export type ClassName = string;
 export type ClassNames = ClassName[];
@@ -90,7 +90,7 @@ export type StyleValues = Record<string, string>;
 
 export type DarkMode = Partial<DarkModeConfig>;
 
-export class Plugger {
+export class Plugin {
   readonly darkMode: DarkMode = 'media';
 
   constructor(readonly api: PluginAPI) {
@@ -142,7 +142,7 @@ export class Plugger {
   }
 }
 
-export class PluggerWithOptions<T> extends Plugger {
+export class PluginWithOptions<T> extends Plugin {
   constructor(
     api: PluginAPI,
     readonly options: T,

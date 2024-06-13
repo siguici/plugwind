@@ -54,31 +54,39 @@ You can install [`PlugWind`](https://plugwind.js.org) from [`NPM`](https://npmjs
 
 ## 💡 Usage
 
-- With `NPM` (from `node_modules`):
+- Import from `node_modules`:
 
   ```javascript
   import { plug } from 'plugwind';
-
-  plug({ plugger } => {
-    plugger
-    .addBase($base)
-    .addVar($varName, $varValue, $varPrefix = 'tw'))
-    .addComponents($components)
-    .addUtilities($utilities);
-  });
   ```
 
-- With `JSR` (using `Deno`):
+- Import without install (using `Deno`):
 
   ```javascript
   import { plug } from 'jsr:@siguici/plugwind';
+  ```
 
-  plug({ plugger } => {
-    plugger
-    .addBase($base)
-    .addVar($varName, $varValue, $varPrefix = 'tw'))
-    .addComponents($components)
-    .addUtilities($utilities);
+- Use the `plug` function to define a plugin:
+
+  ```typescript
+  export default plug(({ plugin }) => {
+    plugin
+      .addBase($base)
+      .addVar($varName, $varValue, $varPrefix = 'tw'))
+      .addComponents($components)
+      .addUtilities($utilities);
+  });
+  ```
+
+- Use the `plug.with` method to define a plugin with options:
+
+  ```typescript
+  export default plug.with<{ prefix?: string }>(({ plugin, options }) => {
+    plugin
+      .addBase($base)
+      .addVar($varName, $varValue, options.prefix ?? 'tw')
+      .addComponents($components)
+      .addUtilities($utilities);
   });
   ```
 
