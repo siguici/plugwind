@@ -1,6 +1,6 @@
 {
   "name": "@siguici/plugwind",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "exports": {
     ".": "./jsr/index.ts",
     "./utils": "./jsr/utils.ts"
