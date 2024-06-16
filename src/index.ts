@@ -12,14 +12,9 @@ export type TailwindPlugin =
       handler: PluginCreator;
       config?: Partial<Config>;
     };
-export type TailwindPluginWithOptions<T> = {
-  (
-    options: T,
-  ): {
-    handler: PluginCreator;
-    config?: Partial<Config> | undefined;
-  };
-  __isOptionsFunction: true;
+export type TailwindPluginWithOptions<T> = (options: T) => {
+  handler: PluginCreator;
+  config?: Partial<Config> | undefined;
 };
 
 export type PluggerAPI = PluginAPI & { plugin: Plugin };
