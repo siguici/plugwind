@@ -6,7 +6,7 @@ import type {
   PluginCreator,
 } from 'tailwindcss/types/config';
 
-import { darkenClass, stylizeProperty } from './utils';
+import { darkenClass } from './utils';
 
 export type TailwindPlugin =
   | PluginCreator
