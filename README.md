@@ -71,11 +71,14 @@ You can install [`PlugWind`](https://plugwind.js.org) from [`NPM`](https://npmjs
   ```typescript
   export default plug(({ plugin }) => {
     plugin
-      .addBase($base)
-      .addVar($varName, $varValue, $varPrefix = 'tw'))
-      .addComponents($components)
-      .addUtilities($utilities)
-      .addVariant($variants);
+      .addBase(base)
+      .addDark(className, lightRule, darkRule)
+      .addVar(varName, varValue, varPrefix = 'tw'))
+      .addComponent(className, rule)
+      .addComponents(components)
+      .addUtility(className, style)
+      .addUtilities(utilities)
+      .addVariant(variants);
   });
   ```
 
@@ -83,12 +86,7 @@ You can install [`PlugWind`](https://plugwind.js.org) from [`NPM`](https://npmjs
 
   ```typescript
   export default plug.with<{ prefix?: string }>(({ plugin, options }) => {
-    plugin
-      .addBase($base)
-      .addVar($varName, $varValue, options.prefix ?? 'tw')
-      .addComponents($components)
-      .addUtilities($utilities)
-      .addVariant($variants);
+    plugin.addVar(name, $value, options.prefix ?? 'tw');
   });
   ```
 

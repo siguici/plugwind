@@ -6,6 +6,8 @@ import type {
   PluginCreator,
 } from 'tailwindcss/types/config';
 
+import { darkenClass, stylizeProperty } from './utils';
+
 export type TailwindPlugin =
   | PluginCreator
   | {
@@ -113,6 +115,21 @@ export class Plugin {
     return this;
   }
 
+  public addDark(
+    className: string,
+    lightRule: RuleSet,
+    darkRule: RuleSet,
+  ): this {
+    return this.addComponents(
+      darkenClass(this.darkMode, className, lightRule, darkRule),
+    );
+  }
+
+  public addComponent(className: string, rule: RuleSet): this {
+    const { e } = this.api;
+    return this.addComponents({ [`.${e(className)}`]: rule });
+  }
+
   public addComponents(components: RuleSet | RuleSet[]): this {
     this.api.addComponents(components);
     return this;
@@ -126,6 +143,13 @@ export class Plugin {
       values,
     });
     return this;
+  }
+
+  public addUtility(className: ClassName, style: DeclarationBlock): this {
+    const { e } = this.api;
+    return this.addUtilities({
+      [`.${e(className)}`]: style,
+    });
   }
 
   public addUtilities(utilities: RuleSet | RuleSet[]): this {
