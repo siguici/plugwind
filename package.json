@@ -2,13 +2,13 @@
   "name": "@siguici/plugwind",
   "version": "0.0.1",
   "license": "MIT",
-  "packageManager": "pnpm@9.3.0",
+  "packageManager": "pnpm@9.4.0",
   "publishConfig": {
     "access": "public"
   },
   "engines": {
-    "node": ">=20.14",
-    "pnpm": ">=9.3",
+    "node": ">=20.15",
+    "pnpm": ">=9.4",
     "npm": "prefer using pnpm",
     "yarn": "prefer using pnpm"
   },
