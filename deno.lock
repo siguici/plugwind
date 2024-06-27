@@ -646,12 +646,12 @@
   "workspace": {
     "packageJson": {
       "dependencies": [
-        "npm:@biomejs/biome@^1.8.1",
-        "npm:@types/node@^20.14.2",
+        "npm:@biomejs/biome@^1.8.2",
+        "npm:@types/node@^20.14.9",
         "npm:denoify@^1.6.13",
         "npm:rimraf@^5.0.7",
         "npm:tailwindcss@^3.4.4",
-        "npm:typescript@^5.4.5"
+        "npm:typescript@^5.5.2"
       ]
     }
   }
