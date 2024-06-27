@@ -74,7 +74,8 @@ You can install [`PlugWind`](https://plugwind.js.org) from [`NPM`](https://npmjs
       .addBase($base)
       .addVar($varName, $varValue, $varPrefix = 'tw'))
       .addComponents($components)
-      .addUtilities($utilities);
+      .addUtilities($utilities)
+      .addVariant($variants);
   });
   ```
 
@@ -86,7 +87,8 @@ You can install [`PlugWind`](https://plugwind.js.org) from [`NPM`](https://npmjs
       .addBase($base)
       .addVar($varName, $varValue, options.prefix ?? 'tw')
       .addComponents($components)
-      .addUtilities($utilities);
+      .addUtilities($utilities)
+      .addVariant($variants);
   });
   ```
 

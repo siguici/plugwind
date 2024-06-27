@@ -65,12 +65,30 @@ export type DeclarationBlock = Record<string, string>;
 export interface RuleSet {
   [key: string]: DeclarationBlock | RuleSet | string;
 }
-export type StyleCallback = (
-  value: string,
-  extra: { modifier: string | null },
-) => RuleSet | null;
+
+export type ExtraModifier = string | null;
+export type Extra = { modifier: ExtraModifier };
+
+export type StyleCallback = (value: string, extra: Extra) => RuleSet | null;
 export type StyleCallbacks = Record<string, StyleCallback>;
 export type StyleValues = Record<string, string>;
+
+export type Selector = string;
+export type SelectorList = Selector[];
+export type SelectorCallback = () => Selector;
+export type SelectorCallbackList = SelectorCallback[];
+
+export type VariantName = string;
+export type VariantDefinition =
+  | Selector
+  | SelectorCallback
+  | SelectorList
+  | SelectorCallbackList;
+export type VariantCallback = (
+  value: string,
+  extra: Extra,
+) => Selector | Selector[];
+export type VariantCallbacks = Record<string, VariantCallback>;
 
 export type DarkMode = Partial<DarkModeConfig>;
 
@@ -120,6 +138,22 @@ export class Plugin {
     values: StyleValues = {},
   ): this {
     this.api.matchUtilities(utilities, {
+      values,
+    });
+    return this;
+  }
+
+  public addVariant(name: VariantName, definition: VariantDefinition): this {
+    this.api.addVariant(name, definition);
+    return this;
+  }
+
+  public matchVariant(
+    name: VariantName,
+    callback: VariantCallback,
+    values: StyleValues = {},
+  ): this {
+    this.api.matchVariant(name, callback, {
       values,
     });
     return this;
