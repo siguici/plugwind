@@ -3,12 +3,12 @@ name: CD
 on:
   push:
     branches:
-      - trunk
+      - main
 
   workflow_run:
     workflows: [CI]
     types: [completed]
-    branches: [trunk]
+    branches: [main]
 
 jobs:
   deploy:
