@@ -19,6 +19,7 @@
   "files": ["js/**/*", "ts/**/*"],
   "exports": {
     ".": "./js/index.js",
+    "./utils": "./js/utils.js",
     "./package.json": "./package.json"
   },
   "bugs": "https://github.com/siguici/plugwind/issues",
