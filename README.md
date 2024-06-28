@@ -4,9 +4,15 @@
 
 ## 🚀 Installation
 
-You can install [`PlugWind`](https://plugwind.js.org) from [`NPM`](https://npmjs.com/package/plugwind) or [`JSR`](https://jsr.io/@siguici/plugwind):
+You can install [`PlugWind`](https://github.com/siguici/plugwind) from [`NPM`](https://npmjs.com/package/plugwind.js) or [`JSR`](https://jsr.io/@siguici/plugwind):
 
 - Using `npm`:
+
+  From [`NPM`](https://npmjs.com/package/plugwind.js):
+
+  ```bash
+  npm install plugwind.js
+  ```
 
   From [`JSR`](https://jsr.io/@siguici/plugwind):
 
@@ -16,6 +22,12 @@ You can install [`PlugWind`](https://plugwind.js.org) from [`NPM`](https://npmjs
 
 - Using `Yarn`:
 
+  From [`NPM`](https://npmjs.com/package/plugwind.js):
+
+  ```bash
+  yarn add plugwind.js
+  ```
+
   From [`JSR`](https://jsr.io/@siguici/plugwind):
 
   ```bash
@@ -23,6 +35,12 @@ You can install [`PlugWind`](https://plugwind.js.org) from [`NPM`](https://npmjs
   ```
 
 - Using `PNPM`:
+
+  From [`NPM`](https://npmjs.com/package/plugwind.js):
+
+  ```bash
+  pnpm add plugwind.js
+  ```
 
   From [`JSR`](https://jsr.io/@siguici/plugwind):
 
@@ -32,6 +50,12 @@ You can install [`PlugWind`](https://plugwind.js.org) from [`NPM`](https://npmjs
 
 - Using `Bun`:
 
+  From [`NPM`](https://npmjs.com/package/plugwind.js):
+
+  ```bash
+  bun install plugwind.js
+  ```
+
   From [`JSR`](https://jsr.io/@siguici/plugwind):
 
   ```bash
@@ -39,6 +63,12 @@ You can install [`PlugWind`](https://plugwind.js.org) from [`NPM`](https://npmjs
   ```
 
 - Using `Deno`:
+
+  From [`NPM`](https://npmjs.com/package/plugwind.js):
+
+  ```bash
+  deno install npm:plugwind.js
+  ```
 
   From [`JSR`](https://jsr.io/@siguici/plugwind):
 
@@ -49,7 +79,7 @@ You can install [`PlugWind`](https://plugwind.js.org) from [`NPM`](https://npmjs
   Without install:
 
   ```typescript
-  import plug from 'jsr:@siguici/plugwind';
+  import plugwind.js from 'jsr:@siguici/plugwind';
   ```
 
 ## 💡 Usage
@@ -57,7 +87,7 @@ You can install [`PlugWind`](https://plugwind.js.org) from [`NPM`](https://npmjs
 - Import from `node_modules`:
 
   ```javascript
-  import plug from '@siguici/plugwind';
+  import plug from 'plugwind.js';
   ```
 
 - Import without install (using `Deno`):
