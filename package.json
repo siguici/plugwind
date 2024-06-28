@@ -18,8 +18,14 @@
   "types": "./ts/",
   "files": ["js/**/*", "ts/**/*"],
   "exports": {
-    ".": "./js/index.js",
-    "./utils": "./js/utils.js",
+    ".": {
+      "default": "./js/index.js",
+      "types": "./ts/index.d.ts"
+    },
+    "./utils": {
+      "default": "./js/utils.js",
+      "types": "./ts/utils.d.ts"
+    },
     "./package.json": "./package.json"
   },
   "bugs": "https://github.com/siguici/plugwind/issues",
