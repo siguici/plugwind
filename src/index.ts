@@ -193,7 +193,12 @@ export class PluginWithOptions<T> extends Plugin {
   }
 }
 
-const _plug = (plugger: Plugger): TailwindPlugin =>
+interface Plug {
+  (plugger: Plugger): TailwindPlugin;
+  with<T>(plugger: PluggerWithOptions<T>): TailwindPluginWithOptions<T>;
+}
+
+const _plug: Plug = (plugger: Plugger): TailwindPlugin =>
   tailwindPlugin((api: PluginAPI) => {
     const plugin = new Plugin(api);
     return plugger({ ...api, plugin });
