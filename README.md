@@ -99,24 +99,23 @@ You can install [`PlugWind`](https://github.com/siguici/plugwind) from [`NPM`](h
 - Use the `plug` function to define a plugin:
 
   ```typescript
-  export default plug(({ plugin }) => {
-    plugin
-      .addBase(base)
-      .addDark(className, lightRule, darkRule)
-      .addVar(varName, varValue, varPrefix = 'tw'))
-      .addComponent(className, rule)
-      .addComponents(components)
-      .addUtility(className, style)
-      .addUtilities(utilities)
-      .addVariant(variants);
+  export default plug((api) => {
+    api.addBase(base);
+    api.addDark(className, lightRule, darkRule);
+    api.addVar(varName, varValue, varPrefix = 'tw'));
+    api.addComponent(className, rule);
+    api.addComponents(components);
+    api.addUtility(className, style);
+    api.addUtilities(utilities);
+    api.addVariant(variants);
   });
   ```
 
 - Use the `plug.with` method to define a plugin with options:
 
   ```typescript
-  export default plug.with<{ prefix?: string }>(({ plugin, options }) => {
-    plugin.addVar(name, $value, options.prefix ?? 'tw');
+  export default plug.with<{ prefix?: string }>((options) => (api) => {
+    api.addVar(name, $value, options.prefix ?? 'tw');
   });
   ```
 
