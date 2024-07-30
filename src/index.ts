@@ -1,35 +1,39 @@
 import tailwindPlugin from 'tailwindcss/plugin';
 import type {
-  Config,
-  DarkModeConfig,
-  PluginAPI,
-  PluginCreator,
+  Config as TailwindConfig,
+  DarkModeConfig as TailwindDarkModeConfig,
+  PluginAPI as TailwindPluginAPI,
+  PluginCreator as TailwindPluginCreator,
 } from 'tailwindcss/types/config';
-
 import { darkenClass } from './utils';
 
-export type TailwindPlugin =
-  | PluginCreator
-  | {
-      handler: PluginCreator;
-      config?: Partial<Config>;
-    };
-export type TailwindPluginWithOptions<T> = {
-  (
-    options: T,
-  ): {
-    handler: PluginCreator;
-    config?: Partial<Config> | undefined;
-  };
+export type Config = Partial<TailwindConfig>;
+export type DarkModeConfig = Partial<TailwindDarkModeConfig>;
+export interface PluginAPI extends TailwindPluginAPI {
+  darkMode: DarkModeConfig;
+  addVar(name: string, value: string, prefix: string): void;
+  addDark(className: string, lightRule: RuleSet, darkRule: RuleSet): void;
+  addComponent(className: string, rule: RuleSet): void;
+  addUtility(className: ClassName, style: DeclarationBlock): void;
+  addVariant(name: VariantName, definition: VariantDefinition): void;
+}
+export type Plugin = (api: PluginAPI) => void;
+export type PluginWithOptions<T> = (options: T) => Plugin;
+export type PluginCreator =
+  | TailwindPluginCreator
+  | { handler: TailwindPluginCreator; config?: Config };
+export type PluginCreatorWithOptions<T> = {
+  (options: T): { handler: Plugin; config?: Config };
   __isOptionsFunction: true;
 };
-
-export type PluggerAPI = PluginAPI & { plugin: Plugin };
-export type PluggerWithOptionsAPI<T> = PluggerAPI & { options: T };
-export type Plugger = (api: PluggerAPI) => PluginCreator;
+export type Plugger = (plugin: Plugin) => PluginCreator;
 export type PluggerWithOptions<T> = (
-  api: PluggerWithOptionsAPI<T>,
-) => PluginCreator;
+  plugin: PluginWithOptions<T>,
+) => PluginCreatorWithOptions<T>;
+export interface Plug {
+  (plugin: Plugin): PluginCreator;
+  with<T>(plugin: PluginWithOptions<T>): PluginCreatorWithOptions<T>;
+}
 
 export type ClassName = string;
 export type ClassNames = ClassName[];
@@ -92,124 +96,44 @@ export type VariantCallback = (
 ) => Selector | Selector[];
 export type VariantCallbacks = Record<string, VariantCallback>;
 
-export type DarkMode = Partial<DarkModeConfig>;
-
-export class Plugin {
-  readonly darkMode: DarkMode = 'media';
-
-  constructor(readonly api: PluginAPI) {
-    const { config } = api;
-    this.darkMode = config().darkMode || 'media';
-  }
-
-  public addVar(name: string, value: string, prefix = 'tw'): this {
-    return this.addBase({
-      ':root': {
-        [`--${prefix}-${name}`]: value,
-      },
-    });
-  }
-
-  public addBase(base: RuleSet | RuleSet[]): this {
-    this.api.addBase(base);
-    return this;
-  }
-
-  public addDark(
-    className: string,
-    lightRule: RuleSet,
-    darkRule: RuleSet,
-  ): this {
-    return this.addComponents(
-      darkenClass(this.darkMode, className, lightRule, darkRule),
-    );
-  }
-
-  public addComponent(className: string, rule: RuleSet): this {
-    const { e } = this.api;
-    return this.addComponents({ [`.${e(className)}`]: rule });
-  }
-
-  public addComponents(components: RuleSet | RuleSet[]): this {
-    this.api.addComponents(components);
-    return this;
-  }
-
-  public matchComponents(
-    components: StyleCallbacks,
-    values: StyleValues = {},
-  ): this {
-    this.api.matchComponents(components, {
-      values,
-    });
-    return this;
-  }
-
-  public addUtility(className: ClassName, style: DeclarationBlock): this {
-    const { e } = this.api;
-    return this.addUtilities({
-      [`.${e(className)}`]: style,
-    });
-  }
-
-  public addUtilities(utilities: RuleSet | RuleSet[]): this {
-    this.api.addUtilities(utilities);
-    return this;
-  }
-
-  public matchUtilities(
-    utilities: StyleCallbacks,
-    values: StyleValues = {},
-  ): this {
-    this.api.matchUtilities(utilities, {
-      values,
-    });
-    return this;
-  }
-
-  public addVariant(name: VariantName, definition: VariantDefinition): this {
-    this.api.addVariant(name, definition);
-    return this;
-  }
-
-  public matchVariant(
-    name: VariantName,
-    callback: VariantCallback,
-    values: StyleValues = {},
-  ): this {
-    this.api.matchVariant(name, callback, {
-      values,
-    });
-    return this;
-  }
+export function extendAPI(api: TailwindPluginAPI): PluginAPI {
+  const { config, e } = api;
+  const darkMode: DarkModeConfig = config().darkMode || 'media';
+  const _api: PluginAPI = {
+    ...api,
+    darkMode,
+    addVar(name: string, value: string, prefix = 'tw'): void {
+      this.addBase({
+        ':root': {
+          [`--${prefix}-${name}`]: value,
+        },
+      });
+    },
+    addDark(className: string, lightRule: RuleSet, darkRule: RuleSet): void {
+      this.addComponents(
+        darkenClass(this.darkMode, className, lightRule, darkRule),
+      );
+    },
+    addComponent(className: string, rule: RuleSet): void {
+      this.addComponents({ [`.${e(className)}`]: rule });
+    },
+    addUtility(className: ClassName, style: DeclarationBlock): void {
+      this.addUtilities({
+        [`.${e(className)}`]: style,
+      });
+    },
+  };
+  return _api;
 }
 
-export class PluginWithOptions<T> extends Plugin {
-  constructor(
-    api: PluginAPI,
-    readonly options: T,
-  ) {
-    super(api);
-  }
-}
-
-interface Plug {
-  (plugger: Plugger): TailwindPlugin;
-  with<T>(plugger: PluggerWithOptions<T>): TailwindPluginWithOptions<T>;
-}
-
-const _plug: Plug = (plugger: Plugger): TailwindPlugin =>
-  tailwindPlugin((api: PluginAPI) => {
-    const plugin = new Plugin(api);
-    return plugger({ ...api, plugin });
+const _plug: Plug = (plugin: Plugin): PluginCreator =>
+  tailwindPlugin((api: TailwindPluginAPI) => {
+    plugin(extendAPI(api));
   });
 
-_plug.with = <T>(
-  plugger: PluggerWithOptions<T>,
-): TailwindPluginWithOptions<T> =>
-  tailwindPlugin.withOptions((options: T) => (api: PluginAPI) => {
-    const plugin = new PluginWithOptions(api, options);
-    return plugger({ ...api, plugin, options });
+_plug.with = <T>(plugin: PluginWithOptions<T>): PluginCreatorWithOptions<T> =>
+  tailwindPlugin.withOptions((options: T) => (api: TailwindPluginAPI) => {
+    plugin(options)(extendAPI(api));
   });
 
 export default _plug;

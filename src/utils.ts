@@ -1,6 +1,6 @@
 import type {
   ClassName,
-  DarkMode,
+  DarkModeConfig,
   DeclarationBlock,
   PropertyName,
   PropertyValue,
@@ -11,7 +11,7 @@ import type {
 } from '.';
 
 export function darken(
-  darkMode: DarkMode,
+  darkMode: DarkModeConfig,
   ruleName: string,
   lightRules: RuleSet,
   darkRules: RuleSet | undefined = undefined,
@@ -83,7 +83,7 @@ export function darken(
 }
 
 export function darkenClass(
-  darkMode: DarkMode,
+  darkMode: DarkModeConfig,
   className: string,
   lightRules: RuleSet,
   darkRules: RuleSet | undefined = undefined,
@@ -172,7 +172,7 @@ export function stylizeUtilityCallback(
 }
 
 export function darkenUtility(
-  darkMode: DarkMode,
+  darkMode: DarkModeConfig,
   utilities: UtilityList,
   name: PropertyName,
   lightValue: PropertyValue,
