@@ -1,4 +1,4 @@
-.PHONY: install check fix build publish
+.PHONY: install check fix build publish deno
 
 install: node_modules pnpm-lock.yaml
 
@@ -17,5 +17,9 @@ fix: install
 build: check
 	pnpm build
 
-publish: build
+deno: build
+	deno task fix
+	deno task check
+
+publish: deno
 	pnpm publish
