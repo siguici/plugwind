@@ -1,5 +1,6 @@
 src/
 jsr/
+scripts/
 tests/
 biome.json
 deno.json

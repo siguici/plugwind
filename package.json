@@ -19,12 +19,16 @@
   "files": ["js/**/*", "ts/**/*"],
   "exports": {
     ".": {
+      "types": "./ts/index.d.ts",
       "default": "./js/index.js",
-      "types": "./ts/index.d.ts"
+      "import": "./js/index.mjs",
+      "require": "./js/index.cjs"
     },
     "./utils": {
+      "types": "./ts/utils.d.ts",
       "default": "./js/utils.js",
-      "types": "./ts/utils.d.ts"
+      "import": "./js/utils.mjs",
+      "require": "./js/utils.cjs"
     },
     "./package.json": "./package.json"
   },
@@ -51,7 +55,7 @@
   "private": false,
   "scripts": {
     "build": "pnpm build.node && pnpm build.deno",
-    "build.node": "pnpm clear.node && tsc --build",
+    "build.node": "pnpm clear.node && tsc --build && tsm scripts/build.ts",
     "build.deno": "pnpm clear.deno && pnpm denoify",
     "check": "biome ci .",
     "check.format": "biome format .",
@@ -67,10 +71,13 @@
   },
   "devDependencies": {
     "@biomejs/biome": "^1.8.3",
-    "@types/node": "^22.0.0",
+    "@types/node": "^22.0.2",
     "denoify": "^1.6.13",
+    "esbuild": "^0.23.0",
+    "globby": "^14.0.2",
     "rimraf": "^6.0.1",
     "tailwindcss": "^3.4.7",
+    "tsm": "^2.3.0",
     "typescript": "^5.5.4"
   },
   "peerDependencies": {
