@@ -11,10 +11,13 @@
     "jsr/*.test.ts",
     "js/*",
     "ts/*",
+    "Makefile",
+    "scripts/*",
     "src/*",
     "tests/*",
     "biome.json",
     "tsconfig.json",
+    "pnpm-lock.yaml",
     "deno.lock"
   ],
   "publish": {
