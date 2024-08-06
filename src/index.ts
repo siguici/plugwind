@@ -49,66 +49,10 @@ export interface Plug {
   with<T>(plugin: PluginWithOptions<T>): PluginCreatorWithOptions<T>;
 }
 
-export type ClassName = string;
-export type ClassNames = ClassName[];
-
-export type PropertyName = string;
-export type PropertyValue = string;
-export type PropertyVariant<T extends string> = {
-  [key in T]: PropertyValue;
-};
-export type PropertyOption<T extends string> =
-  | PropertyValue
-  | PropertyVariant<T>;
-export type PropertyConfig<T extends string> = {
-  [key in PropertyName]: PropertyOption<T>;
-};
-
-export type UtilityName = string;
-export type UtilityList = UtilityName[];
-export type UtilityMap = {
-  [key: UtilityName]: PropertyName;
-};
-export type Utilities = UtilityMap | UtilityList;
-
-export type ComponentName = string;
-export type ComponentOption =
-  | UtilityName
-  | Utilities
-  | Record<UtilityName, Utilities>;
-
-export interface ComponentList {
-  [key: ComponentName]: ComponentOption;
-}
-
 export type DeclarationBlock = Record<string, string>;
 export interface RuleSet {
   [key: string]: DeclarationBlock | RuleSet | string;
 }
-
-export type ExtraModifier = string | null;
-export type Extra = { modifier: ExtraModifier };
-
-export type StyleCallback = (value: string, extra: Extra) => RuleSet | null;
-export type StyleCallbacks = Record<string, StyleCallback>;
-export type StyleValues = Record<string, string>;
-
-export type Selector = string;
-export type SelectorList = Selector[];
-export type SelectorCallback = () => Selector;
-export type SelectorCallbackList = SelectorCallback[];
-
-export type VariantName = string;
-export type VariantDefinition =
-  | Selector
-  | SelectorCallback
-  | SelectorList
-  | SelectorCallbackList;
-export type VariantCallback = (
-  value: string,
-  extra: Extra,
-) => Selector | Selector[];
-export type VariantCallbacks = Record<string, VariantCallback>;
 
 export function extendAPI(api: TailwindPluginAPI): PluginAPI {
   const { config, e } = api;
@@ -221,7 +165,7 @@ export function extendAPI(api: TailwindPluginAPI): PluginAPI {
     addComponent(component: string, rule: RuleSet): void {
       this.addComponents({ [`.${e(component)}`]: rule });
     },
-    addUtility(utility: ClassName, style: DeclarationBlock): void {
+    addUtility(utility: string, style: DeclarationBlock): void {
       this.addUtilities({
         [`.${e(utility)}`]: style,
       });
