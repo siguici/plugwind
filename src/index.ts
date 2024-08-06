@@ -9,11 +9,7 @@ export type Config = Partial<TailwindConfig>;
 export interface PluginAPI extends TailwindPluginAPI {
   addThemes(themes: Record<string, RuleSet>): void;
   addTheme(theme: string, rule: RuleSet): void;
-  addVars(
-    vars: Record<string, string>,
-    selector: string,
-    prefix?: string,
-  ): void;
+  addVars(vars: DeclarationBlock, selector: string, prefix?: string): void;
   addVar(name: string, value: string, selector: string, prefix?: string): void;
   addDark(component: string, darkRule: RuleSet, lightRule: RuleSet): void;
   addDarkVariant(
@@ -75,11 +71,7 @@ export function extendAPI(api: TailwindPluginAPI): PluginAPI {
         [`data-theme="${theme}"`]: rule,
       });
     },
-    addVars(
-      vars: Record<string, string>,
-      selector = ':root',
-      prefix?: string,
-    ): void {
+    addVars(vars: DeclarationBlock, selector = ':root', prefix?: string): void {
       this.addBase({
         [selector]: Object.keys(vars).reduce(
           (acc, name) => {
