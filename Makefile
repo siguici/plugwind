@@ -23,3 +23,4 @@ deno: build
 
 publish: deno
 	pnpm publish
+	git push --tags
