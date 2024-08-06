@@ -7,6 +7,8 @@ import type {
 
 export type Config = Partial<TailwindConfig>;
 export interface PluginAPI extends TailwindPluginAPI {
+  addThemes(themes: Record<string, RuleSet>): void;
+  addTheme(theme: string, rule: RuleSet): void;
   addVars(
     vars: Record<string, string>,
     selector: string,
@@ -63,6 +65,16 @@ export function extendAPI(api: TailwindPluginAPI): PluginAPI {
   const { config, e } = api;
   const _api: PluginAPI = {
     ...api,
+    addThemes(themes: Record<string, RuleSet>): void {
+      for (const [theme, rule] of Object.entries(themes)) {
+        this.addTheme(theme, rule);
+      }
+    },
+    addTheme(theme: string, rule: RuleSet): void {
+      this.addBase({
+        [`data-theme="${theme}"`]: rule,
+      });
+    },
     addVars(
       vars: Record<string, string>,
       selector = ':root',
