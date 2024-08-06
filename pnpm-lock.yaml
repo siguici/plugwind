@@ -32,6 +32,9 @@ importers:
       tailwindcss:
         specifier: ^3.4.7
         version: 3.4.7(ts-node@10.9.2(@types/node@22.1.0)(typescript@5.5.4))
+      tslib:
+        specifier: ^2.6.3
+        version: 2.6.3
       tsm:
         specifier: ^2.3.0
         version: 2.3.0
@@ -1183,6 +1186,9 @@ packages:
   tsafe@1.7.2:
     resolution: {integrity: sha512-dAPfQLhCfCRre5qs+Z5Q2a7s2CV7RxffZUmvj7puGaePYjECzWREJFd3w4XSFe/T5tbxgowfItA/JSSZ6Ma3dA==}
 
+  tslib@2.6.3:
+    resolution: {integrity: sha512-xNvxJEOUiWPGhUuUdQgAJPKOOJfGnIyKySOc09XkKsgdUV/3E2zvwZYdejjmRgPCgcym1juLH3226yA7sEFJKQ==}
+
   tsm@2.3.0:
     resolution: {integrity: sha512-++0HFnmmR+gMpDtKTnW3XJ4yv9kVGi20n+NfyQWB9qwJvTaIWY9kBmzek2YUQK5APTQ/1DTrXmm4QtFPmW9Rzw==}
     engines: {node: '>=12'}
@@ -2329,6 +2335,8 @@ snapshots:
     optional: true
 
   tsafe@1.7.2: {}
+
+  tslib@2.6.3: {}
 
   tsm@2.3.0:
     dependencies:
