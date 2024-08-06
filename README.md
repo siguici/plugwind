@@ -101,11 +101,18 @@ You can install [`PlugWind`](https://github.com/siguici/plugwind) from [`NPM`](h
   ```typescript
   export default plug((api) => {
     api.addBase(base);
-    api.addDark(className, lightRule, darkRule);
-    api.addVar(varName, varValue, varPrefix = 'tw'));
-    api.addComponent(className, rule);
+    api.addTheme(theme, rule);
+    api.addThemes(themes);
+    api.addVar(varName, varValue);
+    api.addVars(vars);
+    api.addDark(component, darkRule, lightRule);
+    api.addDarkVariant(component, darkRule, lightRule, variant);
+    api.addDarkSelector(component, darkRule, lightRule, selector);
+    api.addDarkClass(component, darkRule, lightRule, className);
+    api.addDarkMedia(component, darkRule, lightRule);
+    api.addComponent(component, rule);
     api.addComponents(components);
-    api.addUtility(className, style);
+    api.addUtility(utility, rule);
     api.addUtilities(utilities);
     api.addVariant(variants);
   });
@@ -114,8 +121,8 @@ You can install [`PlugWind`](https://github.com/siguici/plugwind) from [`NPM`](h
 - Use the `plug.with` method to define a plugin with options:
 
   ```typescript
-  export default plug.with<{ prefix?: string }>((options) => (api) => {
-    api.addVar(name, $value, options.prefix ?? 'tw');
+  export default plug.with<{ selector?: string; prefix?: string }>((options) => (api) => {
+    api.addVar(name, $value, options.selector ?? ':root', options.prefix ?? 'tw');
   });
   ```
 
