@@ -121,9 +121,16 @@ You can install [`PlugWind`](https://github.com/siguici/plugwind) from [`NPM`](h
 - Use the `plug.with` method to define a plugin with options:
 
   ```typescript
-  export default plug.with<{ selector?: string; prefix?: string }>((options) => (api) => {
-    api.addVar(name, $value, options.selector ?? ':root', options.prefix ?? 'tw');
-  });
+  export default plug.with<{ selector?: string; prefix?: string }>(
+    (options) => (api) => {
+      api.addVar(
+        name,
+        $value,
+        options.selector ?? ':root',
+        options.prefix ?? 'tw',
+      );
+    },
+  );
   ```
 
 ## 📄 License
