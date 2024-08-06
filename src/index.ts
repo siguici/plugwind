@@ -103,72 +103,68 @@ export function extendAPI(api: TailwindPluginAPI): PluginAPI {
         },
       });
     },
-    addDark(className: string, lightRule: RuleSet, darkRule: RuleSet): void {
+    addDark(darkName: string, lightRule: RuleSet, darkRule: RuleSet): void {
       const darkMode = config().darkMode || 'media';
-      const rules: RuleSet = {};
+      const components: RuleSet = {};
 
-      if (darkRule !== undefined) {
-        let strategy: string;
-        let selector: string | string[] | undefined;
+      let strategy: string;
+      let selector: string | string[] | undefined;
 
-        if (
-          darkMode === 'media' ||
-          darkMode === 'class' ||
-          darkMode === 'selector'
-        ) {
-          strategy = darkMode;
-          selector = undefined;
-        } else {
-          strategy = darkMode[0] || 'media';
-          selector = darkMode[1];
-        }
-
-        switch (strategy) {
-          case 'variant': {
-            const selectors = Array.isArray(selector)
-              ? selector
-              : [selector || '.dark'];
-            for (const selector of selectors) {
-              rules[className] = {
-                ...lightRule,
-                [selector]: {
-                  ...darkRule,
-                },
-              };
-            }
-            break;
-          }
-          case 'selector':
-            rules[className] = {
-              ...lightRule,
-              [`&:where(${selector || '.dark'}, ${selector || '.dark'} *)`]: {
-                ...darkRule,
-              },
-            };
-            break;
-          case 'class':
-            rules[className] = {
-              ...lightRule,
-              [`:is(${selector || '.dark'} &)`]: {
-                ...darkRule,
-              },
-            };
-            break;
-          default:
-            rules[className] = {
-              ...lightRule,
-              '@media (prefers-color-scheme: dark)': {
-                '&': {
-                  ...darkRule,
-                },
-              },
-            };
-        }
+      if (
+        darkMode === 'media' ||
+        darkMode === 'class' ||
+        darkMode === 'selector'
+      ) {
+        strategy = darkMode;
+        selector = undefined;
       } else {
-        rules[className] = lightRule;
+        strategy = darkMode[0] || 'media';
+        selector = darkMode[1];
       }
 
-      this.addComponents(rules);
+      switch (strategy) {
+        case 'variant': {
+          const selectors = Array.isArray(selector)
+            ? selector
+            : [selector || '.dark'];
+          for (const selector of selectors) {
+            components[darkName] = {
+              ...lightRule,
+              [selector]: {
+                ...darkRule,
+              },
+            };
+          }
+          break;
+        }
+        case 'selector':
+          components[darkName] = {
+            ...lightRule,
+            [`&:where(${selector || '.dark'}, ${selector || '.dark'} *)`]: {
+              ...darkRule,
+            },
+          };
+          break;
+        case 'class':
+          components[darkName] = {
+            ...lightRule,
+            [`:is(${selector || '.dark'} &)`]: {
+              ...darkRule,
+            },
+          };
+          break;
+        default:
+          components[darkName] = {
+            ...lightRule,
+            '@media (prefers-color-scheme: dark)': {
+              '&': {
+                ...darkRule,
+              },
+            },
+          };
+      }
+
+      this.addComponents(components);
     },
     addComponent(className: string, rule: RuleSet): void {
       this.addComponents({ [`.${e(className)}`]: rule });
