@@ -7,8 +7,12 @@ import type {
 
 export type Config = Partial<TailwindConfig>;
 export interface PluginAPI extends TailwindPluginAPI {
-  addVars(vars: Record<string, string>, prefix?: string): void;
-  addVar(name: string, value: string, prefix?: string): void;
+  addVars(
+    vars: Record<string, string>,
+    selector: string,
+    prefix?: string,
+  ): void;
+  addVar(name: string, value: string, selector: string, prefix?: string): void;
   addDark(component: string, darkRule: RuleSet, lightRule: RuleSet): void;
   addDarkVariant(
     component: string,
@@ -59,9 +63,13 @@ export function extendAPI(api: TailwindPluginAPI): PluginAPI {
   const { config, e } = api;
   const _api: PluginAPI = {
     ...api,
-    addVars(vars: Record<string, string>, prefix?: string): void {
+    addVars(
+      vars: Record<string, string>,
+      selector = ':root',
+      prefix?: string,
+    ): void {
       this.addBase({
-        ':root': Object.keys(vars).reduce(
+        [selector]: Object.keys(vars).reduce(
           (acc, name) => {
             acc[`--${prefix ? `${prefix}-` : ''}${name}`] = vars[name];
             return acc;
@@ -70,9 +78,14 @@ export function extendAPI(api: TailwindPluginAPI): PluginAPI {
         ),
       });
     },
-    addVar(name: string, value: string, prefix?: string): void {
+    addVar(
+      name: string,
+      value: string,
+      selector = ':root',
+      prefix?: string,
+    ): void {
       this.addBase({
-        ':root': {
+        [selector]: {
           [`--${prefix ? `${prefix}-` : ''}${name}`]: value,
         },
       });
