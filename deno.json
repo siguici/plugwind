@@ -2,8 +2,7 @@
   "name": "@siguici/plugwind",
   "version": "0.2.1",
   "exports": {
-    ".": "./jsr/index.ts",
-    "./utils": "./jsr/utils.ts"
+    ".": "./jsr/index.ts"
   },
   "include": ["deno.json", "jsr/*.ts", "README.md", "LICENSE.md"],
   "exclude": [

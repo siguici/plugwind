@@ -24,12 +24,6 @@
       "import": "./js/index.mjs",
       "require": "./js/index.cjs"
     },
-    "./utils": {
-      "types": "./ts/utils.d.ts",
-      "default": "./js/utils.js",
-      "import": "./js/utils.mjs",
-      "require": "./js/utils.cjs"
-    },
     "./package.json": "./package.json"
   },
   "bugs": "https://github.com/siguici/plugwind/issues",

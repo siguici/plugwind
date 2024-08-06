@@ -1,16 +1,12 @@
 import tailwindPlugin from 'tailwindcss/plugin';
 import type {
   Config as TailwindConfig,
-  DarkModeConfig as TailwindDarkModeConfig,
   PluginAPI as TailwindPluginAPI,
   PluginCreator as TailwindPluginCreator,
 } from 'tailwindcss/types/config';
-import { darkenClass } from './utils';
 
 export type Config = Partial<TailwindConfig>;
-export type DarkModeConfig = Partial<TailwindDarkModeConfig>;
 export interface PluginAPI extends TailwindPluginAPI {
-  darkMode: DarkModeConfig;
   addVar(name: string, value: string, prefix: string): void;
   addDark(className: string, lightRule: RuleSet, darkRule: RuleSet): void;
   addComponent(className: string, rule: RuleSet): void;
@@ -98,10 +94,8 @@ export type VariantCallbacks = Record<string, VariantCallback>;
 
 export function extendAPI(api: TailwindPluginAPI): PluginAPI {
   const { config, e } = api;
-  const darkMode: DarkModeConfig = config().darkMode || 'media';
   const _api: PluginAPI = {
     ...api,
-    darkMode,
     addVar(name: string, value: string, prefix = 'tw'): void {
       this.addBase({
         ':root': {
@@ -110,9 +104,71 @@ export function extendAPI(api: TailwindPluginAPI): PluginAPI {
       });
     },
     addDark(className: string, lightRule: RuleSet, darkRule: RuleSet): void {
-      this.addComponents(
-        darkenClass(this.darkMode, className, lightRule, darkRule),
-      );
+      const darkMode = config().darkMode || 'media';
+      const rules: RuleSet = {};
+
+      if (darkRule !== undefined) {
+        let strategy: string;
+        let selector: string | string[] | undefined;
+
+        if (
+          darkMode === 'media' ||
+          darkMode === 'class' ||
+          darkMode === 'selector'
+        ) {
+          strategy = darkMode;
+          selector = undefined;
+        } else {
+          strategy = darkMode[0] || 'media';
+          selector = darkMode[1];
+        }
+
+        switch (strategy) {
+          case 'variant': {
+            const selectors = Array.isArray(selector)
+              ? selector
+              : [selector || '.dark'];
+            for (const selector of selectors) {
+              rules[className] = {
+                ...lightRule,
+                [selector]: {
+                  ...darkRule,
+                },
+              };
+            }
+            break;
+          }
+          case 'selector':
+            rules[className] = {
+              ...lightRule,
+              [`&:where(${selector || '.dark'}, ${selector || '.dark'} *)`]: {
+                ...darkRule,
+              },
+            };
+            break;
+          case 'class':
+            rules[className] = {
+              ...lightRule,
+              [`:is(${selector || '.dark'} &)`]: {
+                ...darkRule,
+              },
+            };
+            break;
+          default:
+            rules[className] = {
+              ...lightRule,
+              '@media (prefers-color-scheme: dark)': {
+                '&': {
+                  ...darkRule,
+                },
+              },
+            };
+        }
+      } else {
+        rules[className] = lightRule;
+      }
+
+      this.addComponents(rules);
     },
     addComponent(className: string, rule: RuleSet): void {
       this.addComponents({ [`.${e(className)}`]: rule });
