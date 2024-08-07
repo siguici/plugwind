@@ -2,7 +2,7 @@
   "name": "plugwind.js",
   "version": "0.3.0",
   "license": "MIT",
-  "packageManager": "pnpm@9.6.0",
+  "packageManager": "pnpm@9.7.0",
   "publishConfig": {
     "access": "public"
   },
