@@ -33,6 +33,7 @@ export interface PluginAPI extends TailwindPluginAPI {
   addDarkMedia(component: string, darkRule: RuleSet, lightRule: RuleSet): void;
   addComponent(component: string, rule: RuleSet): void;
   addUtility(utility: string, style: DeclarationBlock): void;
+  addProperty(property: string, value: string, utility?: string): void;
 }
 export type Plugin = (api: PluginAPI) => void;
 export type PluginWithOptions<T> = (options: T) => Plugin;
@@ -197,6 +198,11 @@ export function extendAPI(api: TailwindPluginAPI): PluginAPI {
     addUtility(utility: string, style: DeclarationBlock): void {
       this.addUtilities({
         [`.${e(utility)}`]: style,
+      });
+    },
+    addProperty(property: string, value: string, utility?: string): void {
+      this.addUtility(utility ?? property, {
+        [property]: value,
       });
     },
   };
