@@ -34,6 +34,10 @@ export interface PluginAPI extends TailwindPluginAPI {
   addComponent(component: string, rule: RuleSet): void;
   addUtility(utility: string, style: DeclarationBlock): void;
   addProperty(property: string, value: string, utility?: string): void;
+  addProperties(
+    properties: DeclarationBlock,
+    utilities: DeclarationBlock,
+  ): void;
 }
 export type Plugin = (api: PluginAPI) => void;
 export type PluginWithOptions<T> = (options: T) => Plugin;
@@ -204,6 +208,14 @@ export function extendAPI(api: TailwindPluginAPI): PluginAPI {
       this.addUtility(utility ?? property, {
         [property]: value,
       });
+    },
+    addProperties(
+      properties: DeclarationBlock,
+      utilities: DeclarationBlock,
+    ): void {
+      for (const [property, value] of Object.entries(properties)) {
+        this.addProperty(property, value, utilities[property]);
+      }
     },
   };
   return _api;
