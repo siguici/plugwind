@@ -114,6 +114,8 @@ You can install [`PlugWind`](https://github.com/siguici/plugwind) from [`NPM`](h
     api.addComponents(components);
     api.addUtility(utility, rule);
     api.addUtilities(utilities);
+    api.addProperty(property, value, utility);
+    api.addProperties(properties, utilities);
     api.addVariant(variants);
   });
   ```
@@ -125,7 +127,7 @@ You can install [`PlugWind`](https://github.com/siguici/plugwind) from [`NPM`](h
     (options) => (api) => {
       api.addVar(
         name,
-        $value,
+        value,
         options.selector ?? ':root',
         options.prefix ?? 'tw',
       );
