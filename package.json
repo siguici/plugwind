@@ -12,7 +12,6 @@
     "npm": "prefer using pnpm",
     "yarn": "prefer using pnpm"
   },
-  "type": "module",
   "module": "./js/index.js",
   "main": "./js/index.js",
   "types": "./ts/",
