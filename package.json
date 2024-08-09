@@ -1,6 +1,6 @@
 {
   "name": "plugwind.js",
-  "version": "0.4.0",
+  "version": "0.4.1",
   "license": "MIT",
   "packageManager": "pnpm@9.7.0",
   "publishConfig": {
