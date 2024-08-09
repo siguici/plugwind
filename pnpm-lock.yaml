@@ -12,8 +12,8 @@ importers:
         specifier: ^1.8.3
         version: 1.8.3
       '@types/node':
-        specifier: ^22.1.0
-        version: 22.1.0
+        specifier: ^22.2.0
+        version: 22.2.0
       denoify:
         specifier: ^1.6.13
         version: 1.6.13
@@ -24,14 +24,14 @@ importers:
         specifier: ^14.0.2
         version: 14.0.2
       knip:
-        specifier: ^5.27.1
-        version: 5.27.1(@types/node@22.1.0)(typescript@5.5.4)
+        specifier: ^5.27.2
+        version: 5.27.2(@types/node@22.2.0)(typescript@5.5.4)
       rimraf:
         specifier: ^6.0.1
         version: 6.0.1
       tailwindcss:
-        specifier: ^3.4.8
-        version: 3.4.8(ts-node@10.9.2(@types/node@22.1.0)(typescript@5.5.4))
+        specifier: ^3.4.9
+        version: 3.4.9(ts-node@10.9.2(@types/node@22.2.0)(typescript@5.5.4))
       tslib:
         specifier: ^2.6.3
         version: 2.6.3
@@ -380,8 +380,8 @@ packages:
   '@types/comment-json@1.1.1':
     resolution: {integrity: sha512-U70oEqvnkeSSp8BIJwJclERtT13rd9ejK7XkIzMCQQePZe3VW1b7iQggXyW4ZvfGtGeXD0pZw24q5iWNe++HqQ==}
 
-  '@types/node@22.1.0':
-    resolution: {integrity: sha512-AOmuRF0R2/5j1knA3c6G3HOk523Ga+l+ZXltX8SF1+5oqcXijjfTd8fY3XRZqSihEu9XhtQnKYLmkFaoxgsJHw==}
+  '@types/node@22.2.0':
+    resolution: {integrity: sha512-bm6EG6/pCpkxDf/0gDNDdtDILMOHgaQBVOJGdwsqClnxA3xL6jtMv76rLBc006RVMWbmaf0xbmom4Z/5o2nRkQ==}
 
   '@types/parse-json@4.0.2':
     resolution: {integrity: sha512-dISoDXWWQwUquiKsyZ4Ng+HX2KsPL7LyHKHQwgGFEA3IaKac4Obd+h2a/a6waisAoepJlBcx9paWqjA8/HVjCw==}
@@ -850,8 +850,8 @@ packages:
   json-parse-even-better-errors@2.3.1:
     resolution: {integrity: sha512-xyFwyhro/JEof6Ghe2iz2NcXoj2sloNsWr/XsERDK/oiPCfaNhl5ONfp+jQdAZRQQ0IJWNzH9zIZF7li91kh2w==}
 
-  knip@5.27.1:
-    resolution: {integrity: sha512-Cz1Mebby5oJNd11bEErhbu3Vnw678nrxTtwJEJjNFJ5f4OuCXGS1Uwc3Ml8B0Uh9JcolT4+5KPlw+sOsB/NBAg==}
+  knip@5.27.2:
+    resolution: {integrity: sha512-Mya1XEDq1oygibQf0uocQd02Fil8RtvNVhcFAcxypjcc6zakT7wsJtS0xvuwEitilfI0tiFC9PghmJQ3DMKuTg==}
     engines: {node: '>=18.6.0'}
     hasBin: true
     peerDependencies:
@@ -1154,8 +1154,8 @@ packages:
     resolution: {integrity: sha512-ot0WnXS9fgdkgIcePe6RHNk1WA8+muPa6cSjeR3V8K27q9BB1rTE3R1p7Hv0z1ZyAc8s6Vvv8DIyWf681MAt0w==}
     engines: {node: '>= 0.4'}
 
-  tailwindcss@3.4.8:
-    resolution: {integrity: sha512-GkP17r9GQkxgZ9FKHJQEnjJuKBcbFhMFzKu5slmN6NjlCuFnYJMQ8N4AZ6VrUyiRXlDtPKHkesuQ/MS913Nvdg==}
+  tailwindcss@3.4.9:
+    resolution: {integrity: sha512-1SEOvRr6sSdV5IDf9iC+NU4dhwdqzF4zKKq3sAbasUWHEM6lsMhX+eNN5gkPx1BvLFEnZQEUFbXnGj8Qlp83Pg==}
     engines: {node: '>=14.0.0'}
     hasBin: true
 
@@ -1558,7 +1558,7 @@ snapshots:
 
   '@types/comment-json@1.1.1': {}
 
-  '@types/node@22.1.0':
+  '@types/node@22.2.0':
     dependencies:
       undici-types: 6.13.0
 
@@ -2025,11 +2025,11 @@ snapshots:
 
   json-parse-even-better-errors@2.3.1: {}
 
-  knip@5.27.1(@types/node@22.1.0)(typescript@5.5.4):
+  knip@5.27.2(@types/node@22.2.0)(typescript@5.5.4):
     dependencies:
       '@nodelib/fs.walk': 1.2.8
       '@snyk/github-codeowners': 1.1.0
-      '@types/node': 22.1.0
+      '@types/node': 22.2.0
       easy-table: 1.2.0
       enhanced-resolve: 5.17.1
       fast-glob: 3.3.2
@@ -2169,13 +2169,13 @@ snapshots:
       camelcase-css: 2.0.1
       postcss: 8.4.41
 
-  postcss-load-config@4.0.2(postcss@8.4.41)(ts-node@10.9.2(@types/node@22.1.0)(typescript@5.5.4)):
+  postcss-load-config@4.0.2(postcss@8.4.41)(ts-node@10.9.2(@types/node@22.2.0)(typescript@5.5.4)):
     dependencies:
       lilconfig: 3.1.2
       yaml: 2.5.0
     optionalDependencies:
       postcss: 8.4.41
-      ts-node: 10.9.2(@types/node@22.1.0)(typescript@5.5.4)
+      ts-node: 10.9.2(@types/node@22.2.0)(typescript@5.5.4)
 
   postcss-nested@6.2.0(postcss@8.4.41):
     dependencies:
@@ -2290,7 +2290,7 @@ snapshots:
 
   supports-preserve-symlinks-flag@1.0.0: {}
 
-  tailwindcss@3.4.8(ts-node@10.9.2(@types/node@22.1.0)(typescript@5.5.4)):
+  tailwindcss@3.4.9(ts-node@10.9.2(@types/node@22.2.0)(typescript@5.5.4)):
     dependencies:
       '@alloc/quick-lru': 5.2.0
       arg: 5.0.2
@@ -2309,7 +2309,7 @@ snapshots:
       postcss: 8.4.41
       postcss-import: 15.1.0(postcss@8.4.41)
       postcss-js: 4.0.1(postcss@8.4.41)
-      postcss-load-config: 4.0.2(postcss@8.4.41)(ts-node@10.9.2(@types/node@22.1.0)(typescript@5.5.4))
+      postcss-load-config: 4.0.2(postcss@8.4.41)(ts-node@10.9.2(@types/node@22.2.0)(typescript@5.5.4))
       postcss-nested: 6.2.0(postcss@8.4.41)
       postcss-selector-parser: 6.1.1
       resolve: 1.22.8
@@ -2335,14 +2335,14 @@ snapshots:
 
   ts-interface-checker@0.1.13: {}
 
-  ts-node@10.9.2(@types/node@22.1.0)(typescript@5.5.4):
+  ts-node@10.9.2(@types/node@22.2.0)(typescript@5.5.4):
     dependencies:
       '@cspotcode/source-map-support': 0.8.1
       '@tsconfig/node10': 1.0.11
       '@tsconfig/node12': 1.0.11
       '@tsconfig/node14': 1.0.3
       '@tsconfig/node16': 1.0.4
-      '@types/node': 22.1.0
+      '@types/node': 22.2.0
       acorn: 8.12.1
       acorn-walk: 8.3.3
       arg: 4.1.3
