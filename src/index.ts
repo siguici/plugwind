@@ -9,8 +9,13 @@ export type Config = Partial<TailwindConfig>;
 export interface PluginAPI extends TailwindPluginAPI {
   addThemes(themes: Record<string, RuleSet>): void;
   addTheme(theme: string, rule: RuleSet): void;
-  addVars(vars: DeclarationBlock, selector: string, prefix?: string): void;
-  addVar(name: string, value: string, selector: string, prefix?: string): void;
+  addVars(vars: DeclarationBlock, className?: string, prefix?: string): void;
+  addVar(
+    name: string,
+    value: string,
+    className?: string,
+    prefix?: string,
+  ): void;
   addDark(component: string, darkRule: RuleSet, lightRule: RuleSet): void;
   addDarkVariant(
     component: string,
@@ -76,28 +81,34 @@ export function extendAPI(api: TailwindPluginAPI): PluginAPI {
         [`data-theme="${theme}"`]: rule,
       });
     },
-    addVars(vars: DeclarationBlock, selector = ':root', prefix?: string): void {
-      this.addBase({
-        [selector]: Object.keys(vars).reduce(
-          (acc, name) => {
-            acc[`--${prefix ? `${prefix}-` : ''}${name}`] = vars[name];
-            return acc;
-          },
-          {} as Record<string, string>,
-        ),
-      });
+    addVars(vars: DeclarationBlock, className?: string, prefix?: string): void {
+      const rule = Object.keys(vars).reduce(
+        (acc, name) => {
+          acc[`--${prefix ? `${prefix}-` : ''}${name}`] = vars[name];
+          return acc;
+        },
+        {} as Record<string, string>,
+      );
+      className
+        ? this.addComponent(className, rule)
+        : this.addBase({
+            ':root': rule,
+          });
     },
     addVar(
       name: string,
       value: string,
-      selector = ':root',
+      className?: string,
       prefix?: string,
     ): void {
-      this.addBase({
-        [selector]: {
-          [`--${prefix ? `${prefix}-` : ''}${name}`]: value,
-        },
-      });
+      const rule = {
+        [`--${prefix ? `${prefix}-` : ''}${name}`]: value,
+      };
+      className
+        ? this.addComponent(className, rule)
+        : this.addBase({
+            ':root': rule,
+          });
     },
     addDark(
       component: string,
