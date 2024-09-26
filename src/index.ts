@@ -68,7 +68,7 @@ export interface RuleSet {
   [key: string]: DeclarationBlock | RuleSet | string;
 }
 
-export function extendAPI(api: TailwindPluginAPI): PluginAPI {
+export function extendAPI<T extends TailwindPluginAPI>(api: T): PluginAPI {
   const { config, e } = api;
   const _api: PluginAPI = {
     ...api,
