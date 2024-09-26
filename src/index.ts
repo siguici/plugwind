@@ -16,6 +16,14 @@ export interface PluginAPI extends TailwindPluginAPI {
     className?: string,
     prefix?: string,
   ): void;
+  addRoot(rule: RuleSet): void;
+  addComponent(component: string, rule: RuleSet): void;
+  addUtility(utility: string, style: DeclarationBlock): void;
+  addProperty(property: string, value: string, utility?: string): void;
+  addProperties(
+    properties: DeclarationBlock,
+    utilities: DeclarationBlock,
+  ): void;
   addDark(component: string, darkRule: RuleSet, lightRule: RuleSet): void;
   addDarkVariant(
     component: string,
@@ -36,13 +44,6 @@ export interface PluginAPI extends TailwindPluginAPI {
     className?: string,
   ): void;
   addDarkMedia(component: string, darkRule: RuleSet, lightRule: RuleSet): void;
-  addComponent(component: string, rule: RuleSet): void;
-  addUtility(utility: string, style: DeclarationBlock): void;
-  addProperty(property: string, value: string, utility?: string): void;
-  addProperties(
-    properties: DeclarationBlock,
-    utilities: DeclarationBlock,
-  ): void;
 }
 export type Plugin = (api: PluginAPI) => void;
 export type PluginWithOptions<T> = (options: T) => Plugin;
@@ -89,11 +90,7 @@ export function extendAPI(api: TailwindPluginAPI): PluginAPI {
         },
         {} as Record<string, string>,
       );
-      className
-        ? this.addComponent(className, rule)
-        : this.addBase({
-            ':root': rule,
-          });
+      className ? this.addComponent(className, rule) : this.addRoot(rule);
     },
     addVar(
       name: string,
@@ -104,11 +101,33 @@ export function extendAPI(api: TailwindPluginAPI): PluginAPI {
       const rule = {
         [`--${prefix ? `${prefix}-` : ''}${name}`]: value,
       };
-      className
-        ? this.addComponent(className, rule)
-        : this.addBase({
-            ':root': rule,
-          });
+      className ? this.addComponent(className, rule) : this.addRoot(rule);
+    },
+    addRoot(rule: RuleSet): void {
+      this.addBase({
+        ':root': rule,
+      });
+    },
+    addComponent(component: string, rule: RuleSet): void {
+      this.addComponents({ [`.${e(component)}`]: rule });
+    },
+    addUtility(utility: string, style: DeclarationBlock): void {
+      this.addUtilities({
+        [`.${e(utility)}`]: style,
+      });
+    },
+    addProperty(property: string, value: string, utility?: string): void {
+      this.addUtility(utility ?? property, {
+        [property]: value,
+      });
+    },
+    addProperties(
+      properties: DeclarationBlock,
+      utilities: DeclarationBlock,
+    ): void {
+      for (const [property, value] of Object.entries(properties)) {
+        this.addProperty(property, value, utilities[property]);
+      }
     },
     addDark(
       component: string,
@@ -206,27 +225,6 @@ export function extendAPI(api: TailwindPluginAPI): PluginAPI {
           },
         },
       });
-    },
-    addComponent(component: string, rule: RuleSet): void {
-      this.addComponents({ [`.${e(component)}`]: rule });
-    },
-    addUtility(utility: string, style: DeclarationBlock): void {
-      this.addUtilities({
-        [`.${e(utility)}`]: style,
-      });
-    },
-    addProperty(property: string, value: string, utility?: string): void {
-      this.addUtility(utility ?? property, {
-        [property]: value,
-      });
-    },
-    addProperties(
-      properties: DeclarationBlock,
-      utilities: DeclarationBlock,
-    ): void {
-      for (const [property, value] of Object.entries(properties)) {
-        this.addProperty(property, value, utilities[property]);
-      }
     },
   };
   return _api;

@@ -105,11 +105,7 @@ You can install [`PlugWind`](https://github.com/siguici/plugwind) from [`NPM`](h
     api.addThemes(themes);
     api.addVar(varName, varValue);
     api.addVars(vars);
-    api.addDark(component, darkRule, lightRule);
-    api.addDarkVariant(component, darkRule, lightRule, variant);
-    api.addDarkSelector(component, darkRule, lightRule, selector);
-    api.addDarkClass(component, darkRule, lightRule, className);
-    api.addDarkMedia(component, darkRule, lightRule);
+    api.addRoot(rule);
     api.addComponent(component, rule);
     api.addComponents(components);
     api.addUtility(utility, rule);
@@ -117,6 +113,11 @@ You can install [`PlugWind`](https://github.com/siguici/plugwind) from [`NPM`](h
     api.addProperty(property, value, utility);
     api.addProperties(properties, utilities);
     api.addVariant(variants);
+    api.addDark(component, darkRule, lightRule);
+    api.addDarkVariant(component, darkRule, lightRule, variant);
+    api.addDarkSelector(component, darkRule, lightRule, selector);
+    api.addDarkClass(component, darkRule, lightRule, className);
+    api.addDarkMedia(component, darkRule, lightRule);
   });
   ```
 
