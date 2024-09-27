@@ -2,23 +2,20 @@
   "name": "plugwind.js",
   "version": "0.4.1",
   "license": "MIT",
-  "packageManager": "pnpm@9.7.0",
+  "packageManager": "pnpm@9.11.0",
   "publishConfig": {
     "access": "public"
   },
   "engines": {
-    "node": ">=20.16",
-    "pnpm": ">=9.6",
+    "node": ">=20.17",
+    "pnpm": ">=9.11",
     "npm": "prefer using pnpm",
     "yarn": "prefer using pnpm"
   },
   "module": "./js/index.js",
   "main": "./js/index.js",
   "types": "./ts/",
-  "files": [
-    "js/**/*",
-    "ts/**/*"
-  ],
+  "files": ["js/**/*", "ts/**/*"],
   "exports": {
     ".": {
       "types": "./ts/index.d.ts",
