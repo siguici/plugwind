@@ -230,14 +230,24 @@ export function extendAPI<T extends TailwindPluginAPI>(api: T): PluginAPI {
   return _api;
 }
 
-const _plug: Plug = (plugin: Plugin): PluginCreator =>
-  tailwindPlugin((api: TailwindPluginAPI) => {
+export function plug(plugin: Plugin): PluginCreator {
+  return tailwindPlugin((api: TailwindPluginAPI) => {
     plugin(extendAPI(api));
   });
+}
 
-_plug.with = <T>(plugin: PluginWithOptions<T>): PluginCreatorWithOptions<T> =>
-  tailwindPlugin.withOptions((options: T) => (api: TailwindPluginAPI) => {
-    plugin(options)(extendAPI(api));
-  });
+export function plugWith<T>(
+  plugin: PluginWithOptions<T>,
+): PluginCreatorWithOptions<T> {
+  return tailwindPlugin.withOptions(
+    (options: T) => (api: TailwindPluginAPI) => {
+      plugin(options)(extendAPI(api));
+    },
+  );
+}
+
+const _plug: Plug = Object.assign(plug, {
+  with: plugWith,
+});
 
 export default _plug;
