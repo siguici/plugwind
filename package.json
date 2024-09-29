@@ -12,14 +12,13 @@
     "npm": "prefer using pnpm",
     "yarn": "prefer using pnpm"
   },
-  "module": "./js/index.js",
-  "main": "./js/index.js",
+  "module": "./js/index.mjs",
+  "main": "./js/index.cjs",
   "types": "./ts/",
   "files": ["js/**/*", "ts/**/*"],
   "exports": {
     ".": {
       "types": "./ts/index.d.ts",
-      "default": "./js/index.js",
       "import": "./js/index.mjs",
       "require": "./js/index.cjs"
     },
