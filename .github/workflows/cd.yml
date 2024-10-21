@@ -50,6 +50,9 @@ jobs:
       - name: 📂 List distribution files
         run: ls -la jsr
 
+      - name: 🐳 Install dependencies
+        run: deno install
+
       - name: 🚨 Fix code style
         run: deno task fix
 
