@@ -118,6 +118,14 @@ You can install [`PlugWind`](https://github.com/siguici/plugwind) from [`NPM`](h
     api.addDarkSelector(component, darkRule, lightRule, selector);
     api.addDarkClass(component, darkRule, lightRule, className);
     api.addDarkMedia(component, darkRule, lightRule);
+    api.addGradient(color, name, to);
+    api.addGradientFrom(color, name, to);
+    api.addGradientVia(color, name, to);
+    api.addGradientTo(color, name);
+    api.addDarkGradient(darkColor, lightColor, colorName, toColor);
+    api.addDarkGradientFrom(darkColor, lightColor, name, to);
+    api.addDarkGradientVia(darkColor, lightColor, name, to);
+    api.addDarkGradientTo(darkColor, lightColor, name);
   });
   ```
 

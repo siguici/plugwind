@@ -44,6 +44,29 @@ export interface PluginAPI extends TailwindPluginAPI {
     className?: string,
   ): void;
   addDarkMedia(component: string, darkRule: RuleSet, lightRule: RuleSet): void;
+  addGradient(color: string, name?: string, to?: string): void;
+  addGradientFrom(color: string, name?: string, to?: string): void;
+  addGradientVia(color: string, name?: string, to?: string): void;
+  addGradientTo(color: string, name?: string): void;
+  addDarkGradient(
+    darkColor: string,
+    lightColor: string,
+    colorName?: string,
+    toColor?: string,
+  ): void;
+  addDarkGradientFrom(
+    darkColor: string,
+    lightColor: string,
+    name?: string,
+    to?: string,
+  ): void;
+  addDarkGradientVia(
+    darkColor: string,
+    lightColor: string,
+    name?: string,
+    to?: string,
+  ): void;
+  addDarkGradientTo(darkColor: string, lightColor: string, name?: string): void;
 }
 export type Plugin = (api: PluginAPI) => void;
 export type PluginWithOptions<T> = (options: T) => Plugin;
@@ -72,16 +95,19 @@ export function extendAPI<T extends TailwindPluginAPI>(api: T): PluginAPI {
   const { config, e } = api;
   const _api: PluginAPI = {
     ...api,
+
     addThemes(themes: Record<string, RuleSet>): void {
       for (const [theme, rule] of Object.entries(themes)) {
         this.addTheme(theme, rule);
       }
     },
+
     addTheme(theme: string, rule: RuleSet): void {
       this.addBase({
         [`data-theme="${theme}"`]: rule,
       });
     },
+
     addVars(vars: DeclarationBlock, className?: string, prefix?: string): void {
       const rule = Object.keys(vars).reduce(
         (acc, name) => {
@@ -92,6 +118,7 @@ export function extendAPI<T extends TailwindPluginAPI>(api: T): PluginAPI {
       );
       className ? this.addComponent(className, rule) : this.addRoot(rule);
     },
+
     addVar(
       name: string,
       value: string,
@@ -103,24 +130,29 @@ export function extendAPI<T extends TailwindPluginAPI>(api: T): PluginAPI {
       };
       className ? this.addComponent(className, rule) : this.addRoot(rule);
     },
+
     addRoot(rule: RuleSet): void {
       this.addBase({
         ':root': rule,
       });
     },
+
     addComponent(component: string, rule: RuleSet): void {
       this.addComponents({ [`.${e(component)}`]: rule });
     },
+
     addUtility(utility: string, style: DeclarationBlock): void {
       this.addUtilities({
         [`.${e(utility)}`]: style,
       });
     },
+
     addProperty(property: string, value: string, utility?: string): void {
       this.addUtility(utility ?? property, {
         [property]: value,
       });
     },
+
     addProperties(
       properties: DeclarationBlock,
       utilities: DeclarationBlock,
@@ -129,6 +161,7 @@ export function extendAPI<T extends TailwindPluginAPI>(api: T): PluginAPI {
         this.addProperty(property, value, utilities[property]);
       }
     },
+
     addDark(
       component: string,
       darkRule: RuleSet,
@@ -170,6 +203,7 @@ export function extendAPI<T extends TailwindPluginAPI>(api: T): PluginAPI {
           this.addDarkMedia(component, darkRule, lightRule);
       }
     },
+
     addDarkVariant(
       component: string,
       darkRule: RuleSet,
@@ -186,6 +220,7 @@ export function extendAPI<T extends TailwindPluginAPI>(api: T): PluginAPI {
         });
       }
     },
+
     addDarkSelector(
       component: string,
       darkRule: RuleSet,
@@ -199,6 +234,7 @@ export function extendAPI<T extends TailwindPluginAPI>(api: T): PluginAPI {
         },
       });
     },
+
     addDarkClass(
       component: string,
       darkRule: RuleSet,
@@ -212,6 +248,7 @@ export function extendAPI<T extends TailwindPluginAPI>(api: T): PluginAPI {
         },
       });
     },
+
     addDarkMedia(
       component: string,
       darkRule: RuleSet,
@@ -226,7 +263,113 @@ export function extendAPI<T extends TailwindPluginAPI>(api: T): PluginAPI {
         },
       });
     },
+
+    addGradient(color: string, name?: string, to?: string) {
+      this.addGradientFrom(color, name, to);
+      this.addGradientVia(color, name, to);
+      this.addGradientTo(color, name);
+    },
+
+    addGradientFrom(color: string, name?: string, to?: string) {
+      this.addUtility(name ? `--from-${name}` : 'from', {
+        '--tw-gradient-from': `${color} var(--tw-gradient-from-position)`,
+        '--tw-gradient-to': `${to ?? color} var(--tw-gradient-to-position)`,
+        '--tw-gradient-stops': 'var(--tw-gradient-from), var(--tw-gradient-to)',
+      });
+    },
+
+    addGradientVia(color: string, name?: string, to?: string) {
+      this.addUtility(name ? `--via-${name}` : 'via', {
+        '--tw-gradient-to': `${to ?? color} var(--tw-gradient-via-position)`,
+        '--tw-gradient-stops': `var(--tw-gradient-from), ${color} var(--tw-gradient-via-position), var(--tw-gradient-to)`,
+      });
+    },
+
+    addGradientTo(color: string, name?: string) {
+      this.addUtility(name ? `to-${name}` : 'to', {
+        '--tw-gradient-to': `${color} var(--tw-gradient-to-position)`,
+      });
+    },
+
+    addDarkGradient(
+      darkColor: string,
+      lightColor: string,
+      colorName?: string,
+      toColor?: string,
+    ) {
+      this.addDarkGradientFrom(darkColor, lightColor, colorName, toColor);
+      this.addDarkGradientFrom(
+        lightColor,
+        darkColor,
+        `${colorName}-reverse`,
+        toColor,
+      );
+      this.addDarkGradientVia(darkColor, lightColor, colorName, toColor);
+      this.addDarkGradientVia(
+        lightColor,
+        darkColor,
+        `${colorName}-reverse`,
+        toColor,
+      );
+      this.addDarkGradientTo(darkColor, lightColor, colorName);
+      this.addDarkGradientTo(lightColor, darkColor, `${colorName}-reverse`);
+    },
+
+    addDarkGradientFrom(
+      darkColor: string,
+      lightColor: string,
+      name?: string,
+      to?: string,
+    ) {
+      this.addDark(
+        name ? `--from-${name}` : 'from',
+        {
+          '--tw-gradient-from': `${darkColor} var(--tw-gradient-from-position)`,
+          '--tw-gradient-to': `${to ?? darkColor} var(--tw-gradient-to-position)`,
+          '--tw-gradient-stops':
+            'var(--tw-gradient-from), var(--tw-gradient-to)',
+        },
+        {
+          '--tw-gradient-from': `${lightColor} var(--tw-gradient-from-position)`,
+          '--tw-gradient-to': `${to ?? lightColor} var(--tw-gradient-to-position)`,
+          '--tw-gradient-stops':
+            'var(--tw-gradient-from), var(--tw-gradient-to)',
+        },
+      );
+    },
+
+    addDarkGradientVia(
+      darkColor: string,
+      lightColor: string,
+      name?: string,
+      to?: string,
+    ) {
+      this.addDark(
+        name ? `--via-${name}` : 'via',
+        {
+          '--tw-gradient-to': `${to ?? darkColor} var(--tw-gradient-via-position)`,
+          '--tw-gradient-stops': `var(--tw-gradient-from), ${darkColor} var(--tw-gradient-via-position), var(--tw-gradient-to)`,
+        },
+        {
+          '--tw-gradient-to': `${to ?? lightColor} var(--tw-gradient-via-position)`,
+          '--tw-gradient-stops': `var(--tw-gradient-from), ${lightColor} var(--tw-gradient-via-position), var(--tw-gradient-to)`,
+        },
+      );
+    },
+
+    addDarkGradientTo(darkColor: string, lightColor: string, name?: string) {
+      this.addDark(
+        name ? `to-${name}` : 'to',
+        {
+          '--tw-gradient-to': `${darkColor} var(--tw-gradient-to-position)`,
+        },
+        {
+          '--tw-gradient-to': `${lightColor} var(--tw-gradient-to-position)`,
+        },
+      );
+    },
   };
+
   return _api;
 }
 
