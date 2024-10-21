@@ -26,7 +26,7 @@ jobs:
     strategy:
       matrix:
         operating-system: [ubuntu-latest]
-        deno-version: [1.46]
+        deno-version: [2.0]
 
     name: 🚀 Deploy plugwind to JSR using Deno ${{ matrix.deno-version }}
 

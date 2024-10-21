@@ -2,13 +2,13 @@
   "name": "plugwind.js",
   "version": "0.5.0",
   "license": "MIT",
-  "packageManager": "pnpm@9.11.0",
+  "packageManager": "pnpm@9.12.2",
   "publishConfig": {
     "access": "public"
   },
   "engines": {
-    "node": ">=20.17",
-    "pnpm": ">=9.11",
+    "node": ">=20.18",
+    "pnpm": ">=9.12",
     "npm": "prefer using pnpm",
     "yarn": "prefer using pnpm"
   },
@@ -64,17 +64,17 @@
     "unsed": "knip --fix"
   },
   "devDependencies": {
-    "@biomejs/biome": "^1.9.2",
-    "@types/node": "^22.7.4",
-    "denoify": "^1.6.13",
+    "@biomejs/biome": "^1.9.4",
+    "@types/node": "^22.7.7",
+    "denoify": "^1.6.16",
     "esbuild": "^0.24.0",
     "globby": "^14.0.2",
-    "knip": "^5.30.6",
+    "knip": "^5.33.3",
     "rimraf": "^6.0.1",
-    "tailwindcss": "^3.4.13",
-    "tslib": "^2.7.0",
+    "tailwindcss": "^3.4.14",
+    "tslib": "^2.8.0",
     "tsm": "^2.3.0",
-    "typescript": "^5.6.2"
+    "typescript": "^5.6.3"
   },
   "peerDependencies": {
     "tailwindcss": "^3.4.7"
