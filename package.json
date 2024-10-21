@@ -15,7 +15,6 @@
   "module": "./js/index.mjs",
   "main": "./js/index.cjs",
   "types": "./ts/",
-  "files": ["js/**/*", "ts/**/*"],
   "exports": {
     ".": {
       "types": "./ts/index.d.ts",

@@ -1,8 +1,13 @@
+.github/
+Makefile
+tmp/
 src/
 jsr/
 scripts/
 tests/
 biome.json
+pnpm-lock.yaml
+knip.json
 deno.json
 deno.lock
 tsconfig.json
