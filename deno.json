@@ -30,10 +30,18 @@
     "singleQuote": true,
     "proseWrap": "preserve"
   },
+  "lint": {
+    "include": ["jsr/"],
+    "exclude": ["!jsr/*.ts", "!jsr/*.test.ts"],
+    "rules": {
+      "tags": ["recommended"]
+    }
+  },
   "tasks": {
-    "check": "deno task check:fmt && deno task check:lint",
+    "check": "deno task check:fmt && deno task check:lint && deno task check:types",
     "check:fmt": "deno fmt --check",
-    "check:lint": "deno check jsr/*.ts",
-    "fix": "deno lint && deno fmt"
+    "check:lint": "deno lint",
+    "check:types": "deno check jsr/*.ts",
+    "fix": "deno lint --fix && deno fmt"
   }
 }
