@@ -3,7 +3,7 @@ import type {
   Config as TailwindConfig,
   PluginAPI as TailwindPluginAPI,
   PluginCreator as TailwindPluginCreator,
-} from 'tailwindcss/types/config';
+} from 'tailwindcss/plugin';
 
 export type Config = Partial<TailwindConfig>;
 export interface PluginAPI extends TailwindPluginAPI {
@@ -69,7 +69,7 @@ export interface PluginAPI extends TailwindPluginAPI {
   addDarkGradientTo(darkColor: string, lightColor: string, name?: string): void;
 }
 export type Plugin = (api: PluginAPI) => void;
-export type PluginWithOptions<T> = (options: T) => Plugin;
+export type PluginWithOptions<T> = (options?: T) => Plugin;
 export type PluginCreator =
   | TailwindPluginCreator
   | { handler: TailwindPluginCreator; config?: Config };
@@ -92,7 +92,7 @@ export interface RuleSet {
 }
 
 export function extendAPI<T extends TailwindPluginAPI>(api: T): PluginAPI {
-  const { config, e } = api;
+  const { config } = api;
   const _api: PluginAPI = {
     ...api,
 
@@ -138,12 +138,12 @@ export function extendAPI<T extends TailwindPluginAPI>(api: T): PluginAPI {
     },
 
     addComponent(component: string, rule: RuleSet): void {
-      this.addComponents({ [`.${e(component)}`]: rule });
+      this.addComponents({ [`.${component}`]: rule });
     },
 
     addUtility(utility: string, style: DeclarationBlock): void {
       this.addUtilities({
-        [`.${e(utility)}`]: style,
+        [`.${utility}`]: style,
       });
     },
 
@@ -172,7 +172,7 @@ export function extendAPI<T extends TailwindPluginAPI>(api: T): PluginAPI {
       let selector: string[] | string | undefined;
 
       if (typeof darkMode === 'string') {
-        strategy = darkMode;
+        strategy = darkMode as typeof strategy;
         selector = undefined;
       } else {
         strategy = darkMode[0] || 'media';
@@ -383,7 +383,7 @@ export function plugWith<T>(
   plugin: PluginWithOptions<T>,
 ): PluginCreatorWithOptions<T> {
   return tailwindPlugin.withOptions(
-    (options: T) => (api: TailwindPluginAPI) => {
+    (options?: T) => (api: TailwindPluginAPI) => {
       plugin(options)(extendAPI(api));
     },
   );
