@@ -271,7 +271,7 @@ export function extendAPI<T extends TailwindPluginAPI>(api: T): PluginAPI {
     },
 
     addGradientFrom(color: string, name?: string, to?: string) {
-      this.addUtility(name ? `--from-${name}` : 'from', {
+      this.addUtility(name ? `from-${name}` : 'from', {
         '--tw-gradient-from': `${color} var(--tw-gradient-from-position)`,
         '--tw-gradient-to': `${to ?? color} var(--tw-gradient-to-position)`,
         '--tw-gradient-stops': 'var(--tw-gradient-from), var(--tw-gradient-to)',
@@ -279,7 +279,7 @@ export function extendAPI<T extends TailwindPluginAPI>(api: T): PluginAPI {
     },
 
     addGradientVia(color: string, name?: string, to?: string) {
-      this.addUtility(name ? `--via-${name}` : 'via', {
+      this.addUtility(name ? `via-${name}` : 'via', {
         '--tw-gradient-to': `${to ?? color} var(--tw-gradient-via-position)`,
         '--tw-gradient-stops': `var(--tw-gradient-from), ${color} var(--tw-gradient-via-position), var(--tw-gradient-to)`,
       });
@@ -322,7 +322,7 @@ export function extendAPI<T extends TailwindPluginAPI>(api: T): PluginAPI {
       to?: string,
     ) {
       this.addDark(
-        name ? `--from-${name}` : 'from',
+        name ? `from-${name}` : 'from',
         {
           '--tw-gradient-from': `${darkColor} var(--tw-gradient-from-position)`,
           '--tw-gradient-to': `${to ?? darkColor} var(--tw-gradient-to-position)`,
@@ -345,7 +345,7 @@ export function extendAPI<T extends TailwindPluginAPI>(api: T): PluginAPI {
       to?: string,
     ) {
       this.addDark(
-        name ? `--via-${name}` : 'via',
+        name ? `via-${name}` : 'via',
         {
           '--tw-gradient-to': `${to ?? darkColor} var(--tw-gradient-via-position)`,
           '--tw-gradient-stops': `var(--tw-gradient-from), ${darkColor} var(--tw-gradient-via-position), var(--tw-gradient-to)`,
