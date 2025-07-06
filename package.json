@@ -2,13 +2,13 @@
   "name": "plugwind.js",
   "version": "0.7.0",
   "license": "MIT",
-  "packageManager": "pnpm@9.12.2",
+  "packageManager": "pnpm@10.12.4",
   "publishConfig": {
     "access": "public"
   },
   "engines": {
-    "node": ">=20.18",
-    "pnpm": ">=9.12",
+    "node": ">=22.17",
+    "pnpm": ">=10.12",
     "npm": "prefer using pnpm",
     "yarn": "prefer using pnpm"
   },
