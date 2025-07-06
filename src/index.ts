@@ -1,9 +1,9 @@
-import tailwindPlugin from 'tailwindcss/plugin';
 import type {
   Config as TailwindConfig,
   PluginAPI as TailwindPluginAPI,
   PluginCreator as TailwindPluginCreator,
 } from 'tailwindcss/plugin';
+import tailwindPlugin from 'tailwindcss/plugin';
 
 export type Config = Partial<TailwindConfig>;
 export interface PluginAPI extends TailwindPluginAPI {

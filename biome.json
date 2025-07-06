@@ -1,8 +1,8 @@
 {
   "$schema": "./node_modules/@biomejs/biome/configuration_schema.json",
-  "organizeImports": {
-    "enabled": true,
-    "ignore": ["node_modules", "jsr", "js", "ts"]
+  "assist": { "actions": { "source": { "organizeImports": "on" } } },
+  "files": {
+    "includes": ["**", "!**/node_modules", "!**/jsr", "!**/js", "!**/ts"]
   },
   "linter": {
     "enabled": true,
@@ -10,23 +10,33 @@
       "recommended": true,
       "style": {
         "useBlockStatements": "error",
-        "useShorthandArrayType": "error",
         "noShoutyConstants": "warn",
-        "noParameterAssign": "off"
+        "noParameterAssign": "off",
+        "useAsConstAssertion": "error",
+        "useDefaultParameterLast": "error",
+        "useEnumInitializers": "error",
+        "useSelfClosingElements": "error",
+        "useSingleVarDeclarator": "error",
+        "noUnusedTemplateLiteral": "error",
+        "useNumberNamespace": "error",
+        "noInferrableTypes": "error",
+        "noUselessElse": "error",
+        "useConsistentArrayType": {
+          "level": "error",
+          "options": { "syntax": "shorthand" }
+        }
       },
       "suspicious": {
         "noImplicitAnyLet": "off",
         "noExplicitAny": "off"
       }
-    },
-    "ignore": ["node_modules", "jsr", "js", "ts"]
+    }
   },
   "formatter": {
     "enabled": true,
     "formatWithErrors": false,
     "indentStyle": "space",
-    "lineWidth": 80,
-    "ignore": ["node_modules", "jsr", "js", "ts"]
+    "lineWidth": 80
   },
   "javascript": {
     "formatter": {
