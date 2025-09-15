@@ -63,17 +63,17 @@
     "unsed": "knip --fix"
   },
   "devDependencies": {
-    "@biomejs/biome": "^2.0.6",
-    "@types/node": "^24.0.10",
+    "@biomejs/biome": "^2.2.4",
+    "@types/node": "^24.4.0",
     "denoify": "^1.6.17",
-    "esbuild": "^0.25.5",
+    "esbuild": "^0.25.9",
     "globby": "^14.1.0",
-    "knip": "^5.61.3",
+    "knip": "^5.63.1",
     "rimraf": "^6.0.1",
-    "tailwindcss": "^4.1.11",
+    "tailwindcss": "^4.1.13",
     "tslib": "^2.8.1",
     "tsm": "^2.3.0",
-    "typescript": "^5.8.3"
+    "typescript": "^5.9.2"
   },
   "peerDependencies": {
     "tailwindcss": "^4.1.11"
