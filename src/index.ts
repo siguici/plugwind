@@ -167,9 +167,14 @@ export function extendAPI<T extends TailwindPluginAPI>(api: T): PluginAPI {
       darkRule: RuleSet,
       lightRule: RuleSet = {},
     ): void {
-      const darkMode = config().darkMode || 'media';
+      const darkMode = config().darkMode || false;
       let strategy: 'media' | 'class' | 'selector' | 'variant';
       let selector: string[] | string | undefined;
+
+      if (!darkMode) {
+        this.addComponent(component, lightRule);
+        return;
+      }
 
       if (typeof darkMode === 'string') {
         strategy = darkMode as typeof strategy;
