@@ -6,6 +6,8 @@ import type {
 import tailwindPlugin from 'tailwindcss/plugin';
 
 export type { TailwindPluginAPI };
+export type * from './define';
+export * from './define';
 
 export type Config = Partial<TailwindConfig>;
 export interface PluginAPI extends TailwindPluginAPI {
