@@ -225,7 +225,22 @@ export function definePlugin(plugin: Plugin, config?: UserConfig): CssStmts {
       throw new Error('`matchUtilities` is not implemented yet');
     },
     matchVariant(name, value, options?) {
-      throw new Error('`matchVariant()` is not implemented yet');
+      const _value = value('<value>', {
+        modifier: '<modifier>',
+      });
+      if (options?.values) {
+        for (const [k, v] of Object.entries(options.values)) {
+          if (Array.isArray(_value)) {
+            for (const _v of _value) {
+              stmts.push(`@custom-variant ${k} (${_v.replace('<value>', v)});`);
+            }
+          } else {
+            stmts.push(
+              `@custom-variant ${k} (${_value.replace('<value>', v)});`,
+            );
+          }
+        }
+      }
     },
     prefix(className) {
       return (prefix = className || prefix);
