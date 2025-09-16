@@ -232,11 +232,13 @@ export function definePlugin(plugin: Plugin, config?: UserConfig): CssStmts {
         for (const [k, v] of Object.entries(options.values)) {
           if (Array.isArray(_value)) {
             for (const _v of _value) {
-              stmts.push(`@custom-variant ${k} (${_v.replace('<value>', v)});`);
+              stmts.push(
+                `@custom-variant ${k} (${_v.replace('<value>', String(v))});`,
+              );
             }
           } else {
             stmts.push(
-              `@custom-variant ${k} (${_value.replace('<value>', v)});`,
+              `@custom-variant ${k} (${_value.replace('<value>', String(v))});`,
             );
           }
         }
