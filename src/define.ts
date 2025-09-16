@@ -134,14 +134,46 @@ export function definePlugin(plugin: Plugin, config?: UserConfig): CssStmts {
       }
     },
     addBase(base) {
-      stmts.push({ [`@layer base`]: base });
+      const _base: CssInJs = {};
+      for (let [selector, rules] of Object.entries(base)) {
+        if (typeof rules === 'object' && rules) {
+          const _rules: CssInJs = {};
+          for (const [property, value] of Object.entries(rules)) {
+            _rules[camelToSnake(property)] = value;
+          }
+          rules = _rules;
+        }
+        _base[selector] = rules;
+      }
+      stmts.push({ [`@layer base`]: _base });
     },
-    addComponents(utilities, options?) {
-      stmts.push({ [`@layer components`]: utilities });
+    addComponents(components, options?) {
+      const _components: CssInJs = {};
+      for (let [selector, rules] of Object.entries(components)) {
+        if (typeof rules === 'object' && rules) {
+          const _rules: CssInJs = {};
+          for (const [property, value] of Object.entries(rules)) {
+            _rules[camelToSnake(property)] = value;
+          }
+          rules = _rules;
+        }
+        _components[selector] = rules;
+      }
+      stmts.push({ [`@layer components`]: _components });
     },
     addUtilities(utilities, options?) {
-      for (const [selector, rule] of Object.entries(utilities)) {
-        stmts.push({ [`@utility ${selector}`]: rule });
+      for (let [selector, rules] of Object.entries(utilities)) {
+        if (selector.startsWith('.')) {
+          selector = selector.substring(1);
+        }
+        if (typeof rules === 'object' && rules) {
+          const _rules: CssInJs = {};
+          for (const [property, value] of Object.entries(rules)) {
+            _rules[camelToSnake(property)] = value;
+          }
+          rules = _rules;
+        }
+        stmts.push({ [`@utility ${selector}`]: rules });
       }
     },
     config(path, defaultValue) {
