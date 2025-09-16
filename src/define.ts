@@ -225,8 +225,8 @@ export function definePlugin(plugin: Plugin, config?: UserConfig): CssStmts {
       throw new Error('`matchUtilities` is not implemented yet');
     },
     matchVariant(name, value, options?) {
-      const _value = value('<value>', {
-        modifier: '<modifier>',
+      let _value = value('<value>', {
+        modifier: options?.sort ? '@slot' : null,
       });
       if (options?.values) {
         for (const [k, v] of Object.entries(options.values)) {
