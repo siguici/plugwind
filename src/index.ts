@@ -5,6 +5,8 @@ import type {
 } from 'tailwindcss/plugin';
 import tailwindPlugin from 'tailwindcss/plugin';
 
+export type { TailwindPluginAPI };
+
 export type Config = Partial<TailwindConfig>;
 export interface PluginAPI extends TailwindPluginAPI {
   addThemes(themes: Record<string, RuleSet>): void;
@@ -91,7 +93,10 @@ export interface RuleSet {
   [key: string]: DeclarationBlock | RuleSet | string;
 }
 
-export function extendAPI<T extends TailwindPluginAPI>(api: T): PluginAPI {
+export function extendAPI<T extends TailwindPluginAPI>(
+  apiToExtend: T | (() => T),
+): PluginAPI {
+  const api = typeof apiToExtend === 'function' ? apiToExtend() : apiToExtend;
   const { config } = api;
   const _api: PluginAPI = {
     ...api,
