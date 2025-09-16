@@ -218,9 +218,15 @@ export function definePlugin(plugin: Plugin, config?: UserConfig): CssStmts {
     config(path, defaultValue) {
       return getData(path, config, defaultValue);
     },
-    matchComponents(utilities, options?) {},
-    matchUtilities(utilities, options?) {},
-    matchVariant(name, value, options?) {},
+    matchComponents(utilities, options?) {
+      throw new Error('`matchComponents` is not implemented yet');
+    },
+    matchUtilities(utilities, options?) {
+      throw new Error('`matchUtilities` is not implemented yet');
+    },
+    matchVariant(name, value, options?) {
+      throw new Error('`matchVariant()` is not implemented yet');
+    },
     prefix(className) {
       return (prefix = className || prefix);
     },
