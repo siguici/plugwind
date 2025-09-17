@@ -1,43 +1,13 @@
 import { extendAPI, type Plugin, type PluginAPI } from './index';
 import type { Css, CssInJs, CssStmts, UserConfig } from './types';
-import { camelToSnake, getData, normalizeTheme } from './utils';
-
-const NAMESPACE_MAP: Record<string, string> = {
-  colors: '--color-*',
-  color: '--color-*', // Small semantic fallback
-  fontFamily: '--font-*',
-  font: '--font-*',
-  fontSize: '--text-*',
-  text: '--text-*',
-  fontWeight: '--font-weight-*',
-  letterSpacing: '--tracking-*',
-  tracking: '--tracking-*',
-  lineHeight: '--leading-*',
-  leading: '--leading-*',
-  screens: '--breakpoint-*',
-  screen: '--breakpoint-*',
-  container: '--container-*',
-  maxWidth: '--container-*',
-  spacing: '--spacing-*',
-  width: '--spacing-*',
-  height: '--spacing-*',
-  inset: '--spacing-*',
-  borderRadius: '--radius-*',
-  radius: '--radius-*',
-  boxShadow: '--shadow-*',
-  shadow: '--shadow-*',
-  insetShadow: '--inset-shadow-*',
-  dropShadow: '--drop-shadow-*',
-  drop: '--drop-shadow-*',
-  blur: '--blur-*',
-  perspective: '--perspective-*',
-  aspectRatio: '--aspect-*',
-  aspect: '--aspect-*',
-  transitionTimingFunction: '--ease-*',
-  ease: '--ease-*',
-  animation: '--animate-*',
-  animate: '--animate-*',
-};
+import {
+  camelToSnake,
+  getData,
+  NAMESPACE_MAP,
+  normalizeTheme,
+  replaceInCssStmt,
+  valueOptions,
+} from './utils';
 
 export function renderCss(stmts: CssStmts): Css {
   return JSON.stringify(stmts, undefined, 4);
@@ -115,7 +85,35 @@ export function definePlugin(plugin: Plugin, config?: UserConfig): CssStmts {
       throw new Error('`matchComponents` is not implemented yet');
     },
     matchUtilities(utilities, options?) {
-      throw new Error('`matchUtilities` is not implemented yet');
+      const _options = valueOptions(options);
+      const supportsNegativeValues = options?.supportsNegativeValues;
+      for (const [selector, value] of Object.entries(utilities)) {
+        let rules = value('<value>', { modifier: '<modifier>' });
+        let positiveRules: CssInJs | CssInJs[] = {};
+        let negativeRules: CssInJs | CssInJs[] = {};
+        for (const val of _options.values) {
+          positiveRules = replaceInCssStmt(rules, '<value>', val);
+          if (supportsNegativeValues) {
+            negativeRules = replaceInCssStmt(
+              rules,
+              '<value>',
+              `calc(${val} * -1)`,
+            );
+          }
+        }
+        for (const mod of _options.modifiers) {
+          rules = replaceInCssStmt(rules, '<modifier>', mod);
+          positiveRules = replaceInCssStmt(positiveRules, '<modifier>', mod);
+          negativeRules = replaceInCssStmt(negativeRules, '<modifier>', mod);
+        }
+        stmts.push({
+          [`@utility ${selector}-*`]:
+            Object.keys(positiveRules).length > 0 ? positiveRules : rules,
+        });
+        if (supportsNegativeValues && Object.keys(negativeRules).length > 0) {
+          stmts.push({ [`@utility -${selector}-*`]: negativeRules });
+        }
+      }
     },
     matchVariant(name, value, options?) {
       let stmt = value('<value>', {
