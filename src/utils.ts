@@ -158,7 +158,9 @@ export function valueOptions(
       }
     }
     if (literals.length > 0) {
-      values.push(`--value(${[...types, ...literals].join(', ')})`);
+      values.push(
+        `--value(${[...types, ...literals.map((l) => `"${l}"`)].join(', ')})`,
+      );
     }
   }
 
