@@ -261,22 +261,24 @@ export function definePlugin(plugin: Plugin, config?: UserConfig): CssStmts {
       throw new Error('`matchUtilities` is not implemented yet');
     },
     matchVariant(name, value, options?) {
-      let _value = value('<value>', {
+      let stmt = value('<value>', {
         modifier: options?.sort ? '@slot' : null,
       });
-      if (options?.values) {
-        for (const [k, v] of Object.entries(options.values)) {
-          if (Array.isArray(_value)) {
-            for (const _v of _value) {
-              stmts.push(
-                `@custom-variant ${k} (${_v.replace('<value>', String(v))});`,
-              );
-            }
-          } else {
-            stmts.push(
-              `@custom-variant ${k} (${_value.replace('<value>', String(v))});`,
-            );
-          }
+
+      const values = options?.values ?? {};
+      const variants = Array.isArray(stmt) ? stmt : [stmt];
+
+      for (const [k, v] of Object.entries(values)) {
+        for (const variant of variants) {
+          stmts.push(
+            `@custom-variant ${k} (${variant.replace('<value>', String(v))});`,
+          );
+        }
+      }
+
+      if (!options?.values || Object.keys(options.values).length === 0) {
+        for (const variant of variants) {
+          stmts.push(`@custom-variant ${name} (${variant});`);
         }
       }
     },
