@@ -198,7 +198,6 @@ export function definePlugin(plugin: Plugin, config?: UserConfig): CssStmts {
   if (config?.theme) {
     stmts.push({ '@theme': normalizeTheme(config.theme) });
   }
-  let prefix = config?.prefix || '';
   const api: PluginAPI = extendAPI(() => ({
     addVariant(name, variant) {
       if (typeof variant === 'string') {
@@ -282,7 +281,8 @@ export function definePlugin(plugin: Plugin, config?: UserConfig): CssStmts {
       }
     },
     prefix(className) {
-      return (prefix = className || prefix);
+      const prefix = config?.prefix ?? '';
+      return `${prefix}${className}`;
     },
     theme(path, defaultValue?) {
       if (!path) return defaultValue ?? '';
