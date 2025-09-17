@@ -3,6 +3,7 @@ import type { Css, CssInJs, CssStmts, UserConfig } from './types';
 import {
   camelToSnake,
   getData,
+  mergeRules,
   NAMESPACE_MAP,
   normalizeTheme,
   replaceInCssStmt,
@@ -89,29 +90,27 @@ export function definePlugin(plugin: Plugin, config?: UserConfig): CssStmts {
       const supportsNegativeValues = options?.supportsNegativeValues;
       for (const [selector, value] of Object.entries(utilities)) {
         let rules = value('<value>', { modifier: '<modifier>' });
-        let positiveRules: CssInJs | CssInJs[] = {};
-        let negativeRules: CssInJs | CssInJs[] = {};
+        for (const mod of _options.modifiers) {
+          rules = replaceInCssStmt(rules, '<modifier>', mod);
+        }
+        let positiveRules: (CssInJs | CssInJs[])[] = [];
+        let negativeRules: (CssInJs | CssInJs[])[] = [];
         for (const val of _options.values) {
-          positiveRules = replaceInCssStmt(rules, '<value>', val);
+          positiveRules.push(replaceInCssStmt(rules, '<value>', val));
           if (supportsNegativeValues) {
-            negativeRules = replaceInCssStmt(
-              rules,
-              '<value>',
-              `calc(${val} * -1)`,
+            negativeRules.push(
+              replaceInCssStmt(rules, '<value>', `calc(${val} * -1)`),
             );
           }
         }
-        for (const mod of _options.modifiers) {
-          rules = replaceInCssStmt(rules, '<modifier>', mod);
-          positiveRules = replaceInCssStmt(positiveRules, '<modifier>', mod);
-          negativeRules = replaceInCssStmt(negativeRules, '<modifier>', mod);
-        }
         stmts.push({
           [`@utility ${selector}-*`]:
-            Object.keys(positiveRules).length > 0 ? positiveRules : rules,
+            positiveRules.length > 0 ? mergeRules(positiveRules) : rules,
         });
-        if (supportsNegativeValues && Object.keys(negativeRules).length > 0) {
-          stmts.push({ [`@utility -${selector}-*`]: negativeRules });
+        if (supportsNegativeValues && negativeRules.length > 0) {
+          stmts.push({
+            [`@utility -${selector}-*`]: mergeRules(negativeRules),
+          });
         }
       }
     },
