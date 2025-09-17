@@ -26,6 +26,16 @@
       "import": "./js/define.mjs",
       "require": "./js/define.cjs"
     },
+    "./types": {
+      "types": "./ts/types.d.ts",
+      "import": "./js/types.mjs",
+      "require": "./js/types.cjs"
+    },
+    "./utils": {
+      "types": "./ts/utils.d.ts",
+      "import": "./js/utils.mjs",
+      "require": "./js/utils.cjs"
+    },
     "./package.json": "./package.json"
   },
   "bugs": "https://github.com/siguici/plugwind/issues",

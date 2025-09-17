@@ -3,7 +3,9 @@
   "version": "0.9.0",
   "exports": {
     ".": "./jsr/index.ts",
-    "./define": "./jsr/define.ts"
+    "./define": "./jsr/define.ts",
+    "./types": "./jsr/types.ts",
+    "./utils": "./jsr/utils.ts"
   },
   "include": ["deno.json", "jsr/*.ts", "README.md", "LICENSE.md"],
   "exclude": [
