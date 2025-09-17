@@ -81,6 +81,43 @@ type NamedUtilityValue = {
   fraction: string | null;
 };
 
+const NAMESPACE_MAP: Record<string, string> = {
+  colors: '--color-*',
+  color: '--color-*', // Small semantic fallback
+  fontFamily: '--font-*',
+  font: '--font-*',
+  fontSize: '--text-*',
+  text: '--text-*',
+  fontWeight: '--font-weight-*',
+  letterSpacing: '--tracking-*',
+  tracking: '--tracking-*',
+  lineHeight: '--leading-*',
+  leading: '--leading-*',
+  screens: '--breakpoint-*',
+  screen: '--breakpoint-*',
+  container: '--container-*',
+  maxWidth: '--container-*',
+  spacing: '--spacing-*',
+  width: '--spacing-*',
+  height: '--spacing-*',
+  inset: '--spacing-*',
+  borderRadius: '--radius-*',
+  radius: '--radius-*',
+  boxShadow: '--shadow-*',
+  shadow: '--shadow-*',
+  insetShadow: '--inset-shadow-*',
+  dropShadow: '--drop-shadow-*',
+  drop: '--drop-shadow-*',
+  blur: '--blur-*',
+  perspective: '--perspective-*',
+  aspectRatio: '--aspect-*',
+  aspect: '--aspect-*',
+  transitionTimingFunction: '--ease-*',
+  ease: '--ease-*',
+  animation: '--animate-*',
+  animate: '--animate-*',
+};
+
 function camelToSnake(str: string, sep = '-'): string {
   return str.replace(/([A-Z])/g, `${sep}$1`).toLowerCase();
 }
@@ -248,7 +285,26 @@ export function definePlugin(plugin: Plugin, config?: UserConfig): CssStmts {
       return (prefix = className || prefix);
     },
     theme(path, defaultValue?) {
-      return `--value(${camelToSnake(path).replace('.', '-')}-*${defaultValue ? `, ${defaultValue}` : ''})`;
+      if (!path) return defaultValue ?? '';
+
+      const root = path.split('.')[0];
+      const ns = NAMESPACE_MAP[root];
+
+      if (ns) {
+        return `--value(${ns})`;
+      }
+
+      const themeRoot = config?.theme?.[root] ?? config?.theme?.extend?.[root];
+
+      if (themeRoot !== undefined) {
+        return `--value(--${camelToSnake(root)}-*)`;
+      }
+
+      if (defaultValue) {
+        return defaultValue;
+      }
+
+      return '';
     },
   }));
   plugin(api);
