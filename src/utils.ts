@@ -207,5 +207,5 @@ export function mergeRules(
 ): CssInJs | CssInJs[] {
   if (rules.length === 0) return {};
   if (rules.length === 1) return rules[0];
-  return Object.assign({}, ...rules);
+  return Object.assign({}, ...rules.flat());
 }
