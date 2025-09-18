@@ -89,7 +89,9 @@ export function definePlugin(plugin: Plugin, config?: UserConfig): CssStmts {
       const _options = valueOptions(options);
       const supportsNegativeValues = options?.supportsNegativeValues;
       for (const [selector, value] of Object.entries(utilities)) {
-        let rules = value('<value>', { modifier: '<modifier>' });
+        let rules = value('<value>', {
+          modifier: options?.modifiers ? '<modifier>' : null,
+        });
         for (const mod of _options.modifiers) {
           rules = replaceInCssStmt(rules, '<modifier>', mod);
         }
