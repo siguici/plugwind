@@ -1,11 +1,21 @@
 import type tailwindColors from 'tailwindcss/colors';
 
 export type Css = string;
-export type CssStmt = Css | Css[] | CssInJs | CssInJs[];
+export type CssRule = Css | Css[] | CssInJs | CssInJs[];
 export type CssInJs = {
-  [key: string]: CssStmt;
+  [key: string]: CssRule;
 };
-export type CssStmts = CssStmt[];
+export type CssRules = CssRule[];
+
+export type PluginDefinition = Partial<{
+  important: boolean;
+  prefix: string;
+  theme: Record<string, string>;
+  base: CssInJs;
+  variants: Record<string, string | string[] | CssInJs>[];
+  utilities: Record<string, CssInJs | CssInJs[]>[];
+  components: (Record<string, CssInJs> | Record<string, CssInJs>[])[];
+}>;
 
 export type PluginUtils = {
   theme: (keypath: string, defaultValue?: any) => any;

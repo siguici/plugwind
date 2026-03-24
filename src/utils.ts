@@ -1,4 +1,4 @@
-import type { CssInJs, CssStmt, NamedUtilityValue, ThemeConfig } from './types';
+import type { CssInJs, CssRule, NamedUtilityValue, ThemeConfig } from './types';
 
 export const NAMESPACE_MAP: Record<string, string> = {
   colors: '--color-*',
@@ -70,7 +70,7 @@ export function normalizeTheme(config: ThemeConfig): Record<string, any> {
   const base: Record<string, any> = {};
   const extensions: Record<string, any> = {};
 
-  for (let [key, value] of Object.entries(config)) {
+  for (const [key, value] of Object.entries(config)) {
     if (key === 'extend') {
       Object.assign(extensions, value);
     } else {
@@ -78,7 +78,7 @@ export function normalizeTheme(config: ThemeConfig): Record<string, any> {
     }
   }
 
-  for (let [key, value] of Object.entries(extensions)) {
+  for (const [key, value] of Object.entries(extensions)) {
     if (typeof base[key] === 'object' && base[key] !== null) {
       base[key] = {
         ...base[key],
@@ -90,10 +90,10 @@ export function normalizeTheme(config: ThemeConfig): Record<string, any> {
   }
 
   const theme: Record<string, any> = {};
-  for (let [key, value] of Object.entries(base)) {
+  for (const [key, value] of Object.entries(base)) {
     const prefix = `--${camelToSnake(key, '-')}`;
     if (typeof value === 'object' && value) {
-      for (let [subkey, subvalue] of Object.entries(value)) {
+      for (const [subkey, subvalue] of Object.entries(value)) {
         theme[`${prefix}-${camelToSnake(subkey, '-')}`] =
           normalizeValue(subvalue);
       }
@@ -184,22 +184,22 @@ export function valueOptions(
   };
 }
 
-export function replaceInCssStmt<T extends CssStmt>(
-  stmt: T,
+export function replaceInCssRule<T extends CssRule>(
+  rule: T,
   from: string,
   to: string,
 ): T {
-  if (typeof stmt === 'string') {
-    return stmt.replace(from, to) as T;
-  } else if (Array.isArray(stmt)) {
-    return stmt.map((item) => replaceInCssStmt(item, from, to)) as T;
-  } else {
-    const _stmt: CssInJs = {};
-    for (let [key, value] of Object.entries(stmt)) {
-      _stmt[key] = replaceInCssStmt(value, from, to);
-    }
-    return _stmt as T;
+  if (typeof rule === 'string') {
+    return rule.replace(from, to) as T;
   }
+  if (Array.isArray(rule)) {
+    return rule.map((item) => replaceInCssRule(item, from, to)) as T;
+  }
+  const _rule: CssInJs = {};
+  for (const [key, value] of Object.entries(rule)) {
+    _rule[key] = replaceInCssRule(value, from, to);
+  }
+  return _rule as T;
 }
 
 export function mergeRules(
@@ -208,4 +208,88 @@ export function mergeRules(
   if (rules.length === 0) return {};
   if (rules.length === 1) return rules[0];
   return Object.assign({}, ...rules.flat());
+}
+export type Css = string;
+export type CssRule = Css | Css[] | CssInJs | CssInJs[];
+export type CssInJs = {
+  [key: string]: CssRule;
+};
+
+export function deepMergeCss(...rules: CssInJs[]): CssInJs {
+  const result: CssInJs = {};
+
+  for (const rule of rules) {
+    for (const key in rule) {
+      const oldVal = result[key];
+      const newVal = rule[key];
+
+      if (oldVal !== undefined) {
+        result[key] = mergeCssRule(oldVal, newVal);
+      } else {
+        result[key] = newVal;
+      }
+    }
+  }
+
+  return result;
+}
+
+function mergeCssRule(a: CssRule, b: CssRule): CssRule {
+  if (a === b) {
+    return a;
+  }
+
+  // string + string
+  if (isCssString(a) && isCssString(b)) {
+    return a === b ? a : [a, b];
+  }
+
+  // string + string[]
+  if (isCssString(a) && isStringArray(b)) {
+    return b.includes(a) ? b : [a, ...b];
+  }
+  if (isStringArray(a) && isCssString(b)) {
+    return a.includes(b) ? a : [...a, b];
+  }
+
+  // string[] + string[]
+  if (isStringArray(a) && isStringArray(b)) {
+    return Array.from(new Set([...a, ...b]));
+  }
+
+  // CssInJs + CssInJs
+  if (isCssInJs(a) && isCssInJs(b)) {
+    return deepMergeCss(a, b);
+  }
+
+  // CssInJs[] + CssInJs
+  if (isCssInJsArray(a) && isCssInJs(b)) {
+    return [...a, b];
+  }
+  if (isCssInJs(a) && isCssInJsArray(b)) {
+    return [a, ...b];
+  }
+
+  // CssInJs[] + CssInJs[]
+  if (isCssInJsArray(a) && isCssInJsArray(b)) {
+    return [...a, ...b];
+  }
+
+  return b;
+}
+
+export function isCssString(rule: CssRule): rule is string {
+  return typeof rule === 'string';
+}
+
+export function isStringArray(rule: CssRule): rule is string[] {
+  return Array.isArray(rule) && rule.every((item) => typeof item === 'string');
+}
+
+export function isCssInJs(rule: CssRule): rule is CssInJs {
+  return typeof rule === 'object' && !Array.isArray(rule);
+}
+
+export function isCssInJsArray(rule: CssRule): rule is CssInJs[] {
+  return Array.isArray(rule) && rule.every((item) => isCssInJs(item));
 }

@@ -1,68 +1,51 @@
 import { extendAPI, type Plugin, type PluginAPI } from './index';
-import type { Css, CssInJs, CssStmts, UserConfig } from './types';
+import type {
+  ComponentDefinition,
+  Css,
+  CssInJs,
+  CssRules,
+  PluginDefinition,
+  ThemeDefinition,
+  UserConfig,
+  UtilityDefinition,
+  VariantDefinition,
+} from './types';
 import {
   camelToSnake,
+  deepMergeCss,
   getData,
   mergeRules,
   NAMESPACE_MAP,
   normalizeTheme,
-  replaceInCssStmt,
+  replaceInCssRule,
   valueOptions,
 } from './utils';
 
-export function renderCss(stmts: CssStmts): Css {
+export function renderCss(stmts: CssRules): Css {
   return JSON.stringify(stmts, undefined, 4);
 }
 
-export function definePlugin(plugin: Plugin, config?: UserConfig): CssStmts {
-  let stmts: CssStmts = [];
-  if (config?.prefix || config?.important) {
-    let head = '@import "tailwindcss"';
-    if (config?.important) head += ' important';
-    if (config?.prefix) head += ` prefix(${config.prefix})`;
-    head += ';';
-    stmts.push(head);
-  }
+export function definePlugin(
+  plugin: Plugin,
+  config?: UserConfig,
+): PluginDefinition {
+  const stmts: CssRules = [];
+  const definition: PluginDefinition = {};
+  definition.important = !!config?.important;
+  definition.prefix = config?.prefix;
   if (config?.theme) {
-    stmts.push({ '@theme': normalizeTheme(config.theme) });
+    definition.theme = normalizeTheme(config.theme);
   }
+  const customTheme: PluginDefinition['theme'] = {};
   const api: PluginAPI = extendAPI(() => ({
     addVariant(name, variant) {
-      if (typeof variant === 'string') {
-        stmts.push(`@custom-variant ${name} (${variant});`);
-      } else if (Array.isArray(variant)) {
-        stmts.push(`@custom-variant ${name} (${variant.join(', ')});`);
-      } else {
-        stmts.push({ [`@custom-variant ${name}`]: { ...variant } });
-      }
+      (definition.variants ??= []).push({ name, variant });
     },
     addBase(base) {
-      const _base: CssInJs = {};
-      for (let [selector, rules] of Object.entries(base)) {
-        if (typeof rules === 'object' && rules) {
-          const _rules: CssInJs = {};
-          for (const [property, value] of Object.entries(rules)) {
-            _rules[camelToSnake(property)] = value;
-          }
-          rules = _rules;
-        }
-        _base[selector] = rules;
-      }
-      stmts.push({ [`@layer base`]: _base });
+      definition.base = deepMergeCss(definition.base || {}, base);
     },
     addComponents(components, options?) {
-      const _components: CssInJs = {};
-      for (let [selector, rules] of Object.entries(components)) {
-        if (typeof rules === 'object' && rules) {
-          const _rules: CssInJs = {};
-          for (const [property, value] of Object.entries(rules)) {
-            _rules[camelToSnake(property)] = value;
-          }
-          rules = _rules;
-        }
-        _components[selector] = rules;
-      }
-      stmts.push({ [`@layer components`]: _components });
+      (definition.components ??= []).push(components);
     },
     addUtilities(utilities, options?) {
       for (let [selector, rules] of Object.entries(utilities)) {
@@ -93,15 +76,15 @@ export function definePlugin(plugin: Plugin, config?: UserConfig): CssStmts {
           modifier: options?.modifiers ? '<modifier>' : null,
         });
         for (const mod of _options.modifiers) {
-          rules = replaceInCssStmt(rules, '<modifier>', mod);
+          rules = replaceInCssRule(rules, '<modifier>', mod);
         }
-        let positiveRules: (CssInJs | CssInJs[])[] = [];
-        let negativeRules: (CssInJs | CssInJs[])[] = [];
+        const positiveRules: (CssInJs | CssInJs[])[] = [];
+        const negativeRules: (CssInJs | CssInJs[])[] = [];
         for (const val of _options.values) {
-          positiveRules.push(replaceInCssStmt(rules, '<value>', val));
+          positiveRules.push(replaceInCssRule(rules, '<value>', val));
           if (supportsNegativeValues) {
             negativeRules.push(
-              replaceInCssStmt(rules, '<value>', `calc(${val} * -1)`),
+              replaceInCssRule(rules, '<value>', `calc(${val} * -1)`),
             );
           }
         }
@@ -117,7 +100,7 @@ export function definePlugin(plugin: Plugin, config?: UserConfig): CssStmts {
       }
     },
     matchVariant(name, value, options?) {
-      let stmt = value('<value>', {
+      const stmt = value('<value>', {
         modifier: options?.sort ? '@slot' : null,
       });
 
@@ -166,9 +149,63 @@ export function definePlugin(plugin: Plugin, config?: UserConfig): CssStmts {
     },
   }));
   plugin(api);
+  return definition;
+}
+
+export function generatePlugin(definition: PluginDefinition): CssRules {
+  const stmts: CssRules = [];
+  if (definition.theme) stmts.push({ '@theme': definition.theme });
+  if (definition.prefix || definition.important) {
+    let head = '@import "tailwindcss"';
+    if (definition.important) head += ' important';
+    if (definition.prefix) head += ` prefix(${definition.prefix})`;
+    head += ';';
+    stmts.push(head);
+  }
+  if (definition.variants) {
+    for (const [name, variant] of Object.entries(definition.variants)) {
+      if (typeof variant === 'string') {
+        stmts.push(`@custom-variant ${name} (${variant});`);
+      } else if (Array.isArray(variant)) {
+        stmts.push(`@custom-variant ${name} (${variant.join(', ')});`);
+      } else {
+        stmts.push({ [`@custom-variant ${name}`]: { ...variant } });
+      }
+    }
+  }
+  if (definition.base) {
+    const _base: CssInJs = {};
+    for (let [selector, rules] of Object.entries(definition.base)) {
+      if (typeof rules === 'object' && rules) {
+        const _rules: CssInJs = {};
+        for (const [property, value] of Object.entries(rules)) {
+          _rules[camelToSnake(property)] = value;
+        }
+        rules = _rules;
+      }
+      _base[selector] = rules;
+    }
+    stmts.push({ ['@layer base']: _base });
+  }
+  if (definition.components) {
+    for (const components of definition.components) {
+      const _components: CssInJs = {};
+      for (let [selector, rules] of Object.entries(components)) {
+        if (typeof rules === 'object' && rules) {
+          const _rules: CssInJs = {};
+          for (const [property, value] of Object.entries(rules)) {
+            _rules[camelToSnake(property)] = value;
+          }
+          rules = _rules;
+        }
+        _components[selector] = rules;
+      }
+      stmts.push({ ['@layer components']: _components });
+    }
+  }
   return stmts;
 }
 
 export default function (plugin: Plugin, config?: UserConfig): Css {
-  return renderCss(definePlugin(plugin, config));
+  return renderCss(generatePlugin(definePlugin(plugin, config)));
 }
