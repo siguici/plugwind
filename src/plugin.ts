@@ -68,6 +68,7 @@ const css = definePlugin(
       },
     );
 
+    /*
     matchComponents(
       {
         card: (color) => ({
@@ -85,6 +86,7 @@ const css = definePlugin(
         },
       },
     );
+    */
 
     matchVariant(
       'hover-bg',
@@ -156,6 +158,7 @@ const css = definePlugin(
       },
     );
 
+    /*
     matchComponents(
       {
         card: (value, { modifier }) => ({
@@ -179,6 +182,7 @@ const css = definePlugin(
         },
       },
     );
+    */
 
     matchVariant(
       'state',
