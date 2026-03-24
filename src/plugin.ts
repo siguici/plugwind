@@ -186,7 +186,7 @@ const css = definePlugin(
 
     matchVariant(
       'state',
-      (vailue, { modifier }) => {
+      (value, { modifier }) => {
         let base = `&:${value}`;
         if (modifier) base += `.${modifier}`;
         return base;
